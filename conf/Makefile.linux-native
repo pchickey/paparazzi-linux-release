@@ -1,0 +1,204 @@
+# Hey Emacs, this is a -*- makefile -*-
+#
+#   $Id: Makefile.arm7 4169 2009-09-18 11:56:52Z flixr $
+#   Copyright (C) 2003-2005 Pascal Brisset, Antoine Drouin
+#
+# This file is part of paparazzi.
+#
+# paparazzi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# paparazzi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with paparazzi; see the file COPYING.  If not, write to
+# the Free Software Foundation, 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+
+
+#
+# This is the common Makefile for the arm7-target.
+#
+
+SRC_ARCH = linux-native
+
+BINARY=autopilot-linux
+
+# Define programs and commands.
+CC		= gcc
+LD		= $(CC)
+SHELL = sh
+OBJCOPY = objcopy
+OBJDUMP = objdump
+SIZE = size
+NM = nm
+REMOVE = rm -f
+COPY = cp
+
+
+# Launch with "make Q=''" to get full command display
+Q=@
+
+# Output format. (can be srec, ihex, binary)
+FORMAT = ihex
+
+#FLASH_MODE=ISP
+
+SRCARM = $($(TARGET).srcs)
+
+
+# Optimization level, can be [0, 1, 2, 3, s].
+# 0 = turn off optimization. s = optimize for size.
+OPT = 2
+#OPT=3
+
+CSTANDARD = -std=gnu99
+
+CINCS = $(INCLUDES) -I $(SRC_ARCH)/include
+
+# Compiler flags.
+CFLAGS = $(CINCS)
+CFLAGS += -O$(OPT)
+# CFLAGS += -malignment-traps
+CFLAGS += -Wall -Wcast-qual -Wimplicit -Wcast-align -Winline
+CFLAGS += -Wpointer-arith -Wswitch
+CFLAGS += -Wredundant-decls -Wreturn-type -Wshadow -Wunused
+CFLAGS += -Wa,-adhlns=$(OBJDIR)/$(notdir $(subst $(suffix $<),.lst,$<))
+CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
+CFLAGS += -ffunction-sections -fdata-sections
+
+# flags only for C
+CFLAGS + = -Wstrict-prototypes -Wmissing-declarations
+CFLAGS += -Wmissing-prototypes -Wnested-externs
+CFLAGS += $(CSTANDARD)
+CFLAGS += $($(TARGET).CFLAGS) $(LOCAL_CFLAGS)
+
+# Assembler flags.
+ASFLAGS = -Wa,-adhlns=$(OBJDIR)/$(notdir $(<:.S=.lst))
+
+#Additional libraries.
+MATH_LIB = -lm
+
+# Linker flags.
+#LDFLAGS = -n -nostartfiles -Wl,-Map=$(OBJDIR)/$(TARGET).map,--cref
+LDFLAGS += $(MATH_LIB)
+LDFLAGS += -lc
+
+# Define all object files.
+COBJ      = $(SRC:%.c=$(OBJDIR)/%.o)
+AOBJ      = $(ASRC:%.S=$(OBJDIR)/%.o)
+COBJARM   = $(SRCARM:%.c=$(OBJDIR)/%.o)
+
+# Define all listing files.
+LST = $(ASRC:.S=.lst) $(SRC:.c=.lst) $(SRCARM:.c=.lst)
+
+# Compiler flags to generate dependency files.
+GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
+
+# Combine all necessary flags and optional flags.
+# Add target processor to flags.
+ALL_CFLAGS = -I. $(CFLAGS)
+ALL_ASFLAGS =  -I. -x assembler-with-cpp $(ASFLAGS)
+
+
+# Default target.
+all: $(BINARY) 
+
+# Link: create ELF output file from object files.
+.SECONDARY : $(OBJDIR)/$(TARGET).elf
+.PRECIOUS : $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ)
+%.elf: $(AOBJ) $(COBJARM) $(COBJ)
+	@echo LD $@
+	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $@ $(LDFLAGS) $($(TARGET).LDFLAGS)
+
+# Link: create binary
+.SECONDARY : $(OBJDIR)/$(BINARY)
+.PRECIOUS : $(AOBJ) $(COBJARM) $(COBJ)
+$(BINARY): $(AOBJ) $(COBJARM) $(COBJ)
+	@echo LD $@
+	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $@ $(LDFLAGS) 
+
+
+
+
+# Compile: create object files from C source files. ARM-only
+$(OBJDIR)/%.o : %.c $(OBJDIR)/../Makefile.ac
+	@echo CC $@
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
+	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
+
+$(OBJDIR)/%.o : $(SRC_ARCH)/lpcusb/%.c $(OBJDIR)/../Makefile.ac
+	@echo CC $@
+	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
+
+
+# grab files in var/$(AIRCRAFT)/$(TARGET) aka $(OBJDIR)
+#$(OBJDIR)/%.o : $(OBJDIR)/%.c
+#	@echo CC $@
+#	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
+
+# Assemble: create object files from assembler source files. ARM/Thumb
+$(AOBJ) : $(OBJDIR)/%.o : %.S
+	@echo AS $@
+	$(Q)$(CC) -c $(THUMB) $(ALL_ASFLAGS) $< -o $@
+
+
+# Assemble: create object files from assembler source files. ARM-only
+$(AOBJARM) : $(OBJDIR)/%.o : $(SRC_ARCH)/%.S
+	@echo AS $@
+	$(Q)$(CC) -c $(ALL_ASFLAGS) $< -o $@
+
+
+# Target: clean project.
+clean: clean_list
+
+
+clean_list :
+	@echo
+	$(REMOVE) $(OBJDIR)/$(TARGET).hex
+	$(REMOVE) $(OBJDIR)/$(TARGET).obj
+	$(REMOVE) $(OBJDIR)/$(TARGET).elf
+	$(REMOVE) $(OBJDIR)/$(TARGET).map
+	$(REMOVE) $(OBJDIR)/$(TARGET).obj
+	$(REMOVE) $(OBJDIR)/$(TARGET).a90
+	$(REMOVE) $(OBJDIR)/$(TARGET).sym
+	$(REMOVE) $(OBJDIR)/$(TARGET).lnk
+	$(REMOVE) $(OBJDIR)/$(TARGET).lss
+	$(REMOVE) $(COBJ)
+	$(REMOVE) $(AOBJ)
+	$(REMOVE) $(COBJARM)
+	$(REMOVE) $(AOBJARM)
+	$(REMOVE) $(LST)
+	$(REMOVE) $(SRC:.c=.s)
+	$(REMOVE) $(SRC:.c=.d)
+	$(REMOVE) $(SRCARM:.c=.s)
+	$(REMOVE) $(SRCARM:.c=.d)
+	$(REMOVE) .dep/*
+	$(REMOVE) *~
+
+
+# Listing of phony targets.
+.PHONY : all  \
+build elf hex lss sym clean clean_list program
+
+
+#
+# Dependencies
+#
+
+$(OBJDIR)/.depend:
+	@echo DEPEND $@
+	@test -d $(OBJDIR) || mkdir -p $(OBJDIR)
+	$(Q)$(CC) -MM -MG $(CFLAGS) $($(TARGET).CFLAGS) $($(TARGET).srcs) | sed 's|\([^\.]*\.o\)|$(OBJDIR)/\1|' > $@
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),erase)
+-include $(OBJDIR)/.depend
+endif
+endif
