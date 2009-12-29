@@ -22,7 +22,7 @@
  *
  */
 
-#include "uart.h"
+#include "uart_hw.h"
 
 #ifdef USE_UART0
 
@@ -31,10 +31,22 @@
 #endif
 
 
-void uart0_ISR(void);
 void uart0_ISR(void) { return; }
 void uart0_init(void) { return; }  
 void uart0_transmit(unsigned char data ) { return; }
+bool_t uart0_check_free_space( uint8_t len) { return 1; }
+
+bool_t uart_0_ch_available(void) { return 0; }
+uint8_t uart_0_get_ch(void) { return 'g'; }
+
+void uart1_ISR(void) { return; }
+void uart1_init(void) { return; }  
+void uart1_transmit(unsigned char data ) { return; }
+bool_t uart1_check_free_space( uint8_t len) { return 1; }
+
+bool_t uart_1_ch_available(void) { return 0; }
+uint8_t uart_1_get_ch(void) { return 'g'; }
+
 /*
 // removed pch 26dec09
 uint8_t  uart0_rx_buffer[UART0_RX_BUFFER_SIZE];
@@ -212,10 +224,6 @@ void uart0_ISR(void)
  */
 
 #ifdef USE_UART1
-
-void uart1_ISR(void) { return; }
-void uart1_init(void) { return; }  
-void uart1_transmit(unsigned char data ) { return; }
 /*
 #ifndef UART1_VIC_SLOT
 #define UART1_VIC_SLOT 6

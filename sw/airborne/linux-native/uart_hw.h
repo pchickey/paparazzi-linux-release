@@ -25,10 +25,25 @@
 #ifndef UART_HW_H
 #define UART_HW_H
 
-
-/*
+#include "std.h"
+#include <inttypes.h>
 #include "LPC21xx.h"
 #include BOARD_CONFIG
+
+#define Uart0ChAvailable uart_0_ch_available
+#define Uart0Getch uart_0_get_ch
+
+#define Uart1ChAvailable uart_1_ch_available
+#define Uart1Getch uart_1_get_ch
+
+
+bool_t uart_0_ch_available(void);
+uint8_t uart_0_get_ch(void);
+
+bool_t uart_1_ch_available(void);
+uint8_t uart_1_get_ch(void);
+
+/*
 
 
 commented out pch 26dec09

@@ -26,4 +26,4 @@
  *
  */
 
-
+static inline void int_enable(void) { return; }
