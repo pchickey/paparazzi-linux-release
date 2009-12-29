@@ -122,7 +122,7 @@ all: $(BINARY)
 .PRECIOUS : $(AOBJ) $(COBJARM) $(COBJ)
 $(BINARY): $(AOBJ) $(COBJARM) $(COBJ)
 	@echo LD $@
-	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $@ $(LDFLAGS) 
+	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $(OBJDIR)/$(BINARY) $(LDFLAGS) 
 
 
 
