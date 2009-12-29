@@ -31,87 +31,16 @@
 #define SYS_TIME_HW_H
 
 #include "std.h"
-#include "LPC21xx.h"
-#include BOARD_CONFIG
-#include "led.h"
 
 extern uint32_t cpu_time_ticks;
 extern uint32_t last_periodic_event;
 
 void TIMER0_ISR ( void ) ;
 
-/* T0 prescaler, set T0_CLK to 15MHz, T0_CLK = PCLK / T0PCLK_DIV */
-
-#if (PCLK == 15000000)
-#define T0_PCLK_DIV     1
-
-#elif (PCLK == 30000000)
-#define T0_PCLK_DIV     2
-
-#elif (PCLK == 60000000)
-#define T0_PCLK_DIV     4
-
-#else
-#error unknown PCLK frequency
-#endif
-
-#ifndef TIMER0_VIC_SLOT
-#define TIMER0_VIC_SLOT 1
-#endif /* TIMER0_VIC_SLOT */
-
-
-extern uint32_t sys_time_chrono_start; /* T0TC ticks */
-extern uint32_t sys_time_chrono; /* T0TC ticks,frequency: PCLK / T0PCLK_DIV */
-/* A division by SYS_TICS_OF_USEC(1) to get microseconds is too expensive
-   for time measurement: about 2us */
-
-#define SysTimeChronoStart() { sys_time_chrono_start = T0TC; }
-#define SysTimeChronoStop() { sys_time_chrono = (T0TC - sys_time_chrono_start); }
-/** Usage example, disabling IRQ and scaling to us to send
-    disableIRQ(); SysTimeChronoStart();
-    <Code to measure>
-    SysTimeChronoStop(); enableIRQ();
-    sys_time_chrono /=SYS_TICS_OF_USEC(1);
-    DOWNLINK_SEND_CHRONO(42, &sys_time_chrono);
-**/
-#define SysTimeChronoStartDisableIRQ() { disableIRQ(); SysTimeChronoStart(); }
-#define SysTimeChronoStopEnableIRQAndSendUS(_tag) { \
-  SysTimeChronoStop(); \
-  enableIRQ(); \
-  sys_time_chrono /=SYS_TICS_OF_USEC(1); \
-  DOWNLINK_SEND_CHRONO(_tag, &sys_time_chrono); \
-}
-
-
-
 static inline void sys_time_init( void ) {
-  /* setup Timer 0 to count forever  */
-  /* reset & disable timer 0         */
-  T0TCR = TCR_RESET;
-  /* set the prescale divider        */
-  T0PR = T0_PCLK_DIV - 1;
-  /* disable match registers         */
-  T0MCR = 0;
-  /* disable compare registers       */
-  T0CCR = 0;
-  /* disable external match register */
-  T0EMR = 0;                          
-  /* enable timer 0                  */
-  T0TCR = TCR_ENABLE;
-
-  cpu_time_sec = 0;
-  cpu_time_ticks = 0;
-
-  /* select TIMER0 as IRQ    */
-  VICIntSelect &= ~VIC_BIT(VIC_TIMER0);
-  /* enable TIMER0 interrupt */
-  VICIntEnable = VIC_BIT(VIC_TIMER0); 
-  /* on slot vic slot 1      */
-  // _VIC_CNTL(TIMER0_VIC_SLOT) = VIC_ENABLE | VIC_TIMER0;
-  /* address of the ISR      */
-  // _VIC_ADDR(TIMER0_VIC_SLOT) = (uint32_t)TIMER0_ISR; 
-
 }
+
+#define T0_PCLK_DIV = 1000000 // garbage
 
 #define SYS_TICS_OF_SEC(s)   (uint32_t)(s * PCLK / T0_PCLK_DIV + 0.5)
 #define SYS_TICS_OF_USEC(us) SYS_TICS_OF_SEC((us) * 1e-6)
@@ -131,31 +60,23 @@ static inline void sys_time_init( void ) {
 
 #define TIME_TICKS_PER_SEC SYS_TICS_OF_SEC(1)
 
-#define InitSysTimePeriodic() last_periodic_event = T0TC;
+#define InitSysTimePeriodic() last_periodic_event = 0; // garbage pch 28dec09
 
 static inline bool_t sys_time_periodic( void ) {
-  uint32_t now = T0TC;
-  uint32_t dif = now - last_periodic_event;
-  if ( dif >= PERIODIC_TASK_PERIOD) {
-    last_periodic_event += PERIODIC_TASK_PERIOD;
-    cpu_time_ticks += PERIODIC_TASK_PERIOD;
-    if (cpu_time_ticks > TIME_TICKS_PER_SEC) {
-      cpu_time_ticks -= TIME_TICKS_PER_SEC;
-      cpu_time_sec++;
-#ifdef TIME_LED
-      LED_TOGGLE(TIME_LED)
-#endif
-    }
-    return TRUE;
-  }
+// if ( dif >= PERIODIC_TASK_PERIOD) {
+//    last_periodic_event += PERIODIC_TASK_PERIOD;
+//    cpu_time_ticks += PERIODIC_TASK_PERIOD;
+//    if (cpu_time_ticks > TIME_TICKS_PER_SEC) {
+//      cpu_time_ticks -= TIME_TICKS_PER_SEC;
+//      cpu_time_sec++;
+//   }
+//    return TRUE;
+//  }
   return FALSE;
 }
 
 /** Busy wait, in microseconds */
 static inline void sys_time_usleep(uint32_t us) {
-  uint32_t start = T0TC;
-  uint32_t ticks = SYS_TICS_OF_USEC(us);
-  while ((uint32_t)(T0TC-start) < ticks);
 }
 
 #endif /* SYS_TIME_HW_H */

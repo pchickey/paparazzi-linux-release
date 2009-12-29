@@ -1,6 +1,18 @@
 #ifndef LED_HW_H
 #define LED_HW_H
 
+#define LED_DIR(i) 
+#define LED_CLR(i)
+#define LED_SET(i)
+#define LED_PIN_REG(i)
+#define LED_PIN(i)
+#define LED_INIT(i)
+#define LED_ON(i)
+#define LED_OFF(i)
+#define LED_TOGGLE(i)
+
+/* lets trmove lpc header dependence pch 28dec09
+
 #include BOARD_CONFIG
 #include "LPC21xx.h"
 #include "std.h"
@@ -19,8 +31,10 @@
 #define LED_SET(i) _LED_SET(LED_ ## i ## _BANK)
 #define LED_PIN_REG(i) _LED_PIN_REG(LED_ ## i ## _BANK)
 #define LED_PIN(i) LED_ ## i ## _PIN
+*/
 
 /* set pin as output */
+/*
 #define LED_INIT(i)  LED_DIR(i) |= _BV(LED_PIN(i))
 
 #define LED_ON(i) LED_CLR(i) = _BV(LED_PIN(i));
@@ -31,5 +45,5 @@
     else					\
       LED_OFF(i)				\
 }
-
+*/
 #endif /* LED_HW_H */

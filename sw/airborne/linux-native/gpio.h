@@ -2,10 +2,19 @@
 #define GPIO_H
 
 #include "std.h"
+
+/* lets remove lpc headers pch 28dec09 
 #include "LPC21xx.h"
+*/
 
 extern bool_t gpio1_status;
 
+#define GpioOn1() { }
+#define GpioOff1() { }
+#define GpioUpdate1() { }
+#define GpioInit() { }
+
+/*
 #define GPIO_1_BANK 0
 #define GPIO_1_PIN 7
 #define GPIO_1_PINSEL PINSEL0
@@ -35,5 +44,8 @@ extern bool_t gpio1_status;
   GPIO_1_DIR |= _BV(GPIO_1_PIN); \
   GpioOff1(); \
 }
+*/
+
+
 
 #endif /* GPIO_H */
