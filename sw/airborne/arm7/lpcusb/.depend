@@ -1,0 +1,5 @@
+usbhw_lpc.o: usbhw_lpc.c type.h usbdebug.h usbhw_lpc.h usbapi.h \
+  usbstruct.h
+usbcontrol.o: usbcontrol.c type.h usbdebug.h usbstruct.h usbapi.h
+usbstdreq.o: usbstdreq.c type.h usbdebug.h usbstruct.h usbapi.h
+usbinit.o: usbinit.c type.h usbdebug.h usbapi.h usbstruct.h
