@@ -1,0 +1,36 @@
+<!ELEMENT layout (rows|columns|widget)>
+<!ELEMENT rows (columns|widget)*>
+<!ELEMENT columns (rows|widget)*>
+<!ELEMENT widget (papget)*>
+<!ELEMENT papget (property)*>
+<!ELEMENT property EMPTY>
+
+<!ATTLIST layout
+width CDATA #IMPLIED
+height CDATA #IMPLIED
+>
+
+<!ATTLIST rows
+size CDATA #IMPLIED
+>
+
+<!ATTLIST columns
+size CDATA #IMPLIED
+>
+
+<!ATTLIST widget
+name CDATA #REQUIRED
+size CDATA #IMPLIED
+>
+
+<!ATTLIST papget
+type CDATA #REQUIRED
+x CDATA #REQUIRED
+y CDATA #REQUIRED
+display CDATA #REQUIRED
+>
+
+<!ATTLIST property
+name CDATA #REQUIRED
+value CDATA #REQUIRED
+>

@@ -1,0 +1,10 @@
+<airframe name="FYA">
+
+
+ <makefile>
+
+include $(PAPARAZZI_SRC)/conf/autopilot/stm32_test_progs.makefile
+
+ </makefile>
+
+</airframe>

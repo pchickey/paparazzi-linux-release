@@ -1,0 +1,64 @@
+<airframe name="ANTENNA">
+
+
+<section name="DATALINK" prefix="DATALINK_">
+    <define name="DEVICE_TYPE" value="PPRZ"/>
+    <define name="DEVICE_ADDRESS" value="...."/>
+</section>
+
+  <makefile>
+
+ARCHI=avr
+ant.ARCHDIR = $(ARCHI)
+ant.ARCH = atmega128
+ant.TARGET = ant
+ant.TARGETDIR = ant
+
+
+# 16MHz resonator
+ant.LOW_FUSE  = CF
+ant.HIGH_FUSE = 89
+ant.EXT_FUSE  = ff
+ant.LOCK_FUSE = ff
+
+
+ant.CFLAGS += -DBOARD_CONFIG=\"antenna.h\"
+ant.srcs = main_antenna.c sys_time.c $(SRC_ARCH)/sys_time_hw.c
+
+ant.CFLAGS += -DLED
+
+ant.CFLAGS += -DUSE_UART0 -DUART0_BAUD=B38400
+ant.srcs += $(SRC_ARCH)/uart_hw.c
+
+ant.CFLAGS += -DDOWNLINK -DDOWNLINK_TRANSPORT=PprzTransport -DDOWNLINK_DEVICE=Uart0 
+ant.srcs += downlink.c pprz_transport.c
+
+ant.CFLAGS += -DDOWNLINK_AP_DEVICE=Uart0 -DAP
+ant.CFLAGS += -DDATALINK=PPRZ -DPPRZ_UART=Uart0
+ant.srcs += datalink.c
+ant.srcs += traffic_info.c
+
+ant.CFLAGS += -DGPS -DUBX -DUSE_UART1 -DGPS_LINK=Uart1 -DUART1_BAUD=B9600
+ant.srcs += estimator.c gps_ubx.c gps.c
+
+ant.srcs += avr/ant_tracker.c
+
+
+
+#ant.CFLAGS += 
+ant.srcs += avr/ant_v2x.c avr/ant_spi.c
+
+ant.srcs += avr/ant_servo.c
+
+ant.srcs += avr/ant_h_bridge.c
+
+
+ant.CFLAGS += -DADC -DUSE_AD0 -DUSE_AD0_1 -DUSE_AD0_2 -DUSE_AD0_3 -DUSE_AD0_4
+ant.srcs += $(SRC_ARCH)/adc_hw.c
+
+
+  </makefile>
+
+</airframe>
+
+

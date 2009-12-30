@@ -1,0 +1,152 @@
+# Hey Emacs, this is a -*- makefile -*-
+# 
+#   $Id: Makefile.sim 3505 2009-06-17 12:59:32Z hecto $
+#   Copyright (C) 2006 Pascal Brisset, Antoine Drouin
+#
+# This file is part of paparazzi.
+#
+# paparazzi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# paparazzi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with paparazzi; see the file COPYING.  If not, write to
+# the Free Software Foundation, 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.  
+# 
+
+#
+# This is the common Makefile for the sim target.
+#
+
+SRC_ARCH = sim
+
+ifneq ($(SIM_TYPE),JSBSIM)
+CC = gcc
+else
+CC = g++
+endif
+OCAMLC = ocamlc
+SIMDIR = $(PAPARAZZI_SRC)/sw/simulator
+CAMLINCLUDES = -I +lablgtk2 -I $(PAPARAZZI_SRC)/sw/lib/ocaml -I $(SIMDIR) -I +xml-light
+SIMSITLML = $(OBJDIR)/simsitl.ml
+MYGTKINITCMO = myGtkInit.cmo
+SITLCMA = $(SIMDIR)/sitl.cma
+
+# Launch with "make Q=''" to get full command display
+Q=@
+
+#
+# End of configuration part.
+#
+
+ifneq ($(SIM_TYPE),JSBSIM)
+INCLUDES += -I `ocamlc -where`
+endif
+
+CFLAGS		=						\
+	-W -Wall 						\
+	$(INCLUDES)					  	\
+	$($(TARGET).CFLAGS)					\
+	$(LOCAL_CFLAGS)						\
+	-O2							\
+
+# meschach prototypes trigger numerous warnings
+ifneq ($(SIM_TYPE),BOOZ)
+ifneq ($(SIM_TYPE),JSBSIM)
+CFLAGS	+= -Wstrict-prototypes
+endif
+endif
+
+
+LDFLAGS		=	-lm					\
+
+ifeq ($(SIM_TYPE),BOOZ)
+LDFLAGS		+= $($(TARGET).LDFLAGS)
+endif
+ifeq ($(SIM_TYPE),JSBSIM)
+LDFLAGS		+= $($(TARGET).LDFLAGS)
+endif
+#
+# General rules
+#
+
+$(TARGET).srcsnd = $(notdir $($(TARGET).srcs))
+$(TARGET).objso	= $($(TARGET).srcs:%.c=$(OBJDIR)/%.o)
+$(TARGET).objs	= $($(TARGET).objso:%.S=$(OBJDIR)/%.o)
+
+all compile: $(OBJDIR)/simsitl
+
+
+
+ifeq ($(SIM_TYPE),BOOZ)
+$(OBJDIR)/simsitl : $($(TARGET).objs)
+	@echo LD $@
+	$(Q)$(CC) -o $@ $($(TARGET).objs) $(LDFLAGS)
+else
+ifeq ($(SIM_TYPE),JSBSIM)
+$(OBJDIR)/simsitl : $($(TARGET).objs)
+	@echo LD $@
+	$(Q)$(CC) $(CFLAGS) -o $@ $($(TARGET).objs) $(LDFLAGS)
+else
+$(OBJDIR)/simsitl : $($(TARGET).objs) $(SITLCMA) $(SIMSITLML)
+	@echo LD $@
+	$(Q)$(OCAMLC) -g -custom $(CAMLINCLUDES) -o $@ unix.cma str.cma xml-light.cma glibivy-ocaml.cma lib-pprz.cma lablgtk.cma $($(TARGET).objs) $(MYGTKINITCMO) $(SITLCMA) $(SIMSITLML)
+endif
+endif
+
+
+# The id of the A/C is hardcoded in the code (to be improved with dynlink ?)
+$(SIMSITLML) : $(SIMDIR)/simsitl.ml
+	@echo "Sim.ac_name := \"$(AIRCRAFT)\"" > $@
+	@cat $< >> $@
+
+%.s: %.c
+	$(CC) $(CFLAGS) -S -o $@ $<
+
+%.s: %.cpp
+	$(CC) $(CFLAGS) -S -o $@ $<
+
+$(OBJDIR)/%.s: %.c
+	@echo CC $@
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -S -o $@ $<
+
+$(OBJDIR)/%.s: %.cpp
+	@echo CC $@
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -S -o $@ $<
+
+$(OBJDIR)/%.o: %.c $(OBJDIR)/../Makefile.ac
+	@echo CC $@
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
+	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/%.o: %.cpp $(OBJDIR)/../Makefile.ac
+	@echo CC $@
+	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
+	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
+
+avr_clean:
+	rm -rf $(OBJDIR)
+
+
+#
+# Dependencies
+#
+$(OBJDIR)/.depend:
+	@test -d $(OBJDIR) || mkdir -p $(OBJDIR)
+	@echo DEPEND $@
+	$(Q)$(CC) -MM -MG $(CFLAGS) $($(TARGET).srcs) | sed 's|\([^\.]*\.o\)|$(OBJDIR)/\1|' > $@
+
+ifneq ($(MAKECMDGOALS),clean) 
+ifneq ($(MAKECMDGOALS),erase) 
+-include $(OBJDIR)/.depend
+endif
+endif

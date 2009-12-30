@@ -1,0 +1,191 @@
+<!-- $Id: ubx.xml 3160 2009-03-31 23:22:21Z flixr $ -->
+<!-- ublox UBX Binary Protocol description -->
+
+<!DOCTYPE ubx SYSTEM "ubx.dtd">
+
+<ubx>
+  <class name="NAV" ID="0x01">
+    <message name="POSLLH" ID="0x02" length="28">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="LON" format="I4" scaling="1e-7" unit="deg"/>
+      <field name="LAT" format="I4" scaling="1e-7" unit="deg"/>
+      <field name="HEIGHT" format="I4" unit="mm"/>
+      <field name="HMSL" format="I4" unit="mm"/>
+      <field name="Hacc" format="U4" unit="mm"/>
+      <field name="Vacc" format="U4" unit="mm"/>
+    </message>
+
+    <message name="DOP" ID="0x04" length="18">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="GDOP" format="U2"/>
+      <field name="PDOP" format="U2"/>
+      <field name="TDOP" format="U2"/>
+      <field name="VDOP" format="U2"/>
+      <field name="HDOP" format="U2"/>
+      <field name="NDOP" format="U2"/>
+      <field name="EDOP" format="U2"/>
+    </message>
+
+    <message name="SOL" ID="0x06" length="52">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="Frac" format="I4" unit="ns"/>
+      <field name="week" format="I2"/>
+      <field name="GPSfix" format="U1"/>
+      <field name="Flags" format="U1"/>
+      <field name="ECEF_X" format="I4" unit="cm"/>
+      <field name="ECEF_Y" format="I4" unit="cm"/>
+      <field name="ECEF_Z" format="I4" unit="cm"/>
+      <field name="Pacc" format="U4"/>
+      <field name="ECEFVX" format="I4" unit="cm/s"/>
+      <field name="ECEFVY" format="I4" unit="cm/s"/>
+      <field name="ECEFVZ" format="I4" unit="cm/s"/>
+      <field name="Sacc" format="U4"/>
+      <field name="PDOP" format="U2"/>
+      <field name="res1" format="U1"/>
+      <field name="numSV" format="U1"/>
+      <field name="res2" format="U4"/>
+    </message>
+
+    <message name="POSUTM" ID="0x08" length="18">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="EAST" format="I4" unit="cm"/>
+      <field name="NORTH" format="I4" unit="cm"/>
+      <field name="ALT" format="I4" unit="cm"/>
+      <field name="ZONE" format="I1"/>
+      <field name="HEM" format="I1"/>
+    </message>
+
+    <message name="STATUS" ID="0x03" length="16">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="GPSfix" format="U1"/>
+      <field name="Flags" format="U1"/>
+      <field name="DiffS" format="U1"/>
+      <field name="res" format="U1"/>
+      <field name="TTFF" format="U4"/>
+      <field name="MSSS" format="U4"/>
+    </message>
+
+    <message name="VELNED" ID="0x12" length="36">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="VEL_N" format="I4" unit="cm/s"/>
+      <field name="VEL_E" format="I4" unit="cm/s"/>
+      <field name="VEL_D" format="I4" unit="cm/s"/>
+      <field name="Speed" format="U4" unit="cm/s"/>
+      <field name="GSpeed" format="U4" unit="cm/s"/>
+      <field name="Heading" format="I4" scaling="1e-5" unit="deg"/>
+      <field name="SAcc" format="U4" unit="cm/s"/>
+      <field name="CAcc" format="U4" scaling="1e-5" unit="deg"/>
+    </message>
+
+    <message name="SVINFO" ID="0x30">
+      <field name="ITOW" format="U4" unit="ms"/>
+      <field name="NCH" format="U1"/>
+      <field name="RES1" format="U1"/>
+      <field name="RES2" format="U2"/>
+      <block times="NCH" length="12">
+        <field name="chn" format="U1"/>
+        <field name="SVID" format="U1"/>
+        <field name="Flags" format="U1"/>
+        <field name="QI" format="I1"/>
+        <field name="CNO" format="U1" unit="dbHz"/>
+        <field name="Elev" format="I1" unit="deg"/>
+        <field name="Azim" format="I2" unit="deg"/>
+        <field name="PRRes" format="I4" unit="cm"/>
+      </block>
+  </message>
+ </class>
+
+ <class name="CFG" ID="0x06">
+  
+    <message name="PRT" ID="0x00">
+      <block length="20">
+        <field name="PortId" format="U1"/>
+        <field name="ReS0" format="U1"/>
+        <field name="ReS1" format="U2"/>
+        <field name="Mode" format="U4"/>
+        <field name="Baudrate" format="U4"/>
+        <field name="In_proto_mask" format="U2"/>
+        <field name="Out_proto_mask" format="U2"/>
+        <field name="Flags" format="U2"/>
+        <field name="Res2" format="U2"/>
+      </block>
+    </message>
+
+    <message name="MSG" ID="0x01">
+      <block length="6">
+        <field name="Class" format="U1"/>
+        <field name="MsgId" format="U1"/>
+        <field name="Rate0" format="U1"/>
+        <field name="Rate1" format="U1"/>
+        <field name="Rate2" format="U1"/>
+        <field name="Rate3" format="U1"/>
+      </block>
+    </message>
+
+    <message name="RST" ID="0x04" length="4">
+      <field name="nav_bbr" format="U2"/>
+      <field name="Reset" format="U1"/>
+      <field name="Res" format="U1"/>
+    </message>
+
+    <message name="RATE" ID="0x08" length="6">
+      <field name="Meas" format="U2"/>
+      <field name="Nav" format="U2"/>
+      <field name="Time" format="U2"/>
+    </message>
+
+    <message name="NAV" ID="0x03" length="28">
+      <field name="Platform" format="U1"/>
+      <field name="MinSvs" format="U1"/>
+      <field name="MaxSvs" format="U1"/>
+      <field name="MinCN0" format="U1"/>
+      <field name="AbsCN0" format="U1"/>
+      <field name="MinELE" format="U1"/>
+      <field name="DGPSTTR" format="U1"/>
+      <field name="DGPST0" format="U1"/>
+      <field name="PRCAGE" format="U1"/>
+      <field name="CPCAGE" format="U1"/>
+      <field name="MinCLT" format="U2"/>
+      <field name="AbsCLT" format="U2"/>
+      <field name="MaxDR" format="U1"/>
+      <field name="NAVOPT" format="U1"/>
+      <field name="PDOP" format="U2"/>
+      <field name="TDOP" format="U2"/>
+      <field name="PACC" format="U2"/>
+      <field name="TACC" format="U2"/>
+      <field name="FACC" format="U2"/>
+      <field name="StaticThres" format="U1"/>
+      <field name="reserved" format="U1"/>
+    </message>
+
+    <message name="SBAS" ID="0x16">
+      <field name="mode" format="U1"/>
+      <field name="usage" format="U1"/>
+      <field name="maxbas" format="U1"/>
+      <field name="reserved" format="U1"/>
+      <field name="scanmode" format="U4"/>
+    </message>
+
+    <message name="CFG" ID="0x09" length="12">
+      <field name="Clear_mask" format="U4"/>
+      <field name="Save_mask" format="U4"/>
+      <field name="Load_mask" format="U4"/>
+    </message>
+
+
+ </class>
+
+ <class name="ACK" ID="0x05">
+
+  <message name="ACK" ID="0x01" length="2">
+    <field name="ClsID" format="U1"/>
+    <field name="MsgID" format="U1"/>
+  </message>
+  <message name="NAK" ID="0x00" length="2">
+    <field name="ClsID" format="U1"/>
+    <field name="MsgID" format="U1"/>
+  </message>
+
+ </class>
+
+</ubx>

@@ -1,0 +1,12 @@
+DESTDIR=/
+
+ifeq ($(PAPARAZZI_HOME),)
+PAPARAZZI_HOME=$(HOME)/paparazzi
+endif
+
+ifeq ($(PAPARAZZI_SRC),)
+TOOLS=$(DESTDIR)/usr/share/paparazzi/bin
+else
+TOOLS=$(PAPARAZZI_SRC)/sw/tools
+endif
+

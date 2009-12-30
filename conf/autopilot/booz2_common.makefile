@@ -1,0 +1,10 @@
+
+
+
+SRC_BOOZ=booz
+SRC_BOOZ_ARCH=$(SRC_BOOZ)/arch/$(ARCH)
+SRC_BOOZ_TEST=$(SRC_BOOZ)/test
+
+CFG_BOOZ=$(PAPARAZZI_SRC)/conf/autopilot/
+
+BOOZ_INC = -I$(SRC_BOOZ) -I$(SRC_BOOZ_ARCH)

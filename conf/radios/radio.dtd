@@ -1,0 +1,20 @@
+<!-- Radio configuration DTD -->
+
+<!ELEMENT radio (channel+)>
+<!ELEMENT channel EMPTY>
+
+<!ATTLIST radio
+  name CDATA #REQUIRED
+  data_min CDATA #REQUIRED
+  data_max CDATA #REQUIRED
+  sync_min CDATA #REQUIRED
+  sync_max CDATA #REQUIRED
+  pulse_type CDATA #REQUIRED>
+
+<!ATTLIST channel
+  ctl CDATA #REQUIRED
+  function CDATA #REQUIRED
+  min CDATA #REQUIRED
+  neutral CDATA #REQUIRED
+  max CDATA #REQUIRED
+  average CDATA #REQUIRED>
