@@ -22,7 +22,7 @@
  *
  */
 
-#include "uart_hw.h"
+#include "uart.h"
 
 #ifdef USE_UART0
 void uart0_ISR(void) { return; }

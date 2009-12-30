@@ -32,9 +32,11 @@
 #ifdef USE_UART0
   #define Uart0ChAvailable uart_0_ch_available
   #define Uart0Getch uart_0_get_ch
-
   bool_t uart_0_ch_available(void);
   uint8_t uart_0_get_ch(void);
+  
+
+
 #endif // USE_UART1
 
 #ifdef USE_UART1
