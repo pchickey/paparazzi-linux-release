@@ -15,14 +15,14 @@
 #define ATT_BAUD B19200
 #define ATT_MODEM "/dev/ftdi1"
 
-void mq_send_gps(void *, char *);
-void print_callback(void *, char *);
+void mq_send_gps(void*, void*, int);
+void print_callback(void*, void*, int);
 
 struct tty_reader_arguments
 {
   char* fname;
   struct termios tio;
-  void (*callback)(void *, char *);
+  void (*callback)(void*, void*, int);
   void *cb_args;
 };
 
@@ -31,18 +31,17 @@ struct mq_send_gps_args
   mqd_t queue;
 };
 
-void mq_send_gps( void* v_args, char* str )
+void mq_send_gps( void* v_args, void* data, int len )
 {
   struct mq_send_gps_args* args = (struct mq_send_gps_args *) v_args;
-  printf("entered mq_send_gps with %d\n", args->queue);
- 
-  mq_send(args->queue, str, strlen(str), 0);
-  printf("send to %d\n", args->queue);
+  mq_send(args->queue, data, len, 0);
 }
 
-void print_callback( void* nachtmicht, char* str )
+void print_callback( void* nachtmicht, void* str_v, int len )
 {
-  //printf(":%s",str);
+  char * str = (char *) str_v;
+  str[len] = 0;
+  printf(":%s",str);
 }
 
 void *tty_reader( void *v_args )
@@ -63,13 +62,12 @@ void *tty_reader( void *v_args )
 
   while(1)
   {
-    //printf("%s-------",args->fname);
+    printf("%s---",args->fname);
     res = read(fd,buf,255);
-    //printf(">\n");
+    printf(">%d\n", res);
     if (res > -1)
     {
-      buf[res] = 0;
-      args->callback(args->cb_args,buf);
+      args->callback(args->cb_args,buf,res);
     } 
     else 
     {
@@ -86,7 +84,7 @@ int main( void )
   struct tty_reader_arguments gps_args, att_args;
 
   mqd_t gps_queue = mq_open(GPS_MQ_NAME, O_WRONLY | O_CREAT, 0666, NULL);
-  mqd_t att_queue = mq_open(GPS_MQ_NAME, O_WRONLY | O_CREAT, 0666, NULL);
+  mqd_t att_queue = mq_open(ATT_MQ_NAME, O_WRONLY | O_CREAT, 0666, NULL);
   perror("a");
 
   bzero(&gps_args,sizeof(gps_args));
@@ -107,7 +105,7 @@ int main( void )
   att_args.callback = print_callback;
   att_args.cb_args = NULL;
 
-  pthread_create(&threads[1], NULL, tty_reader, (void *)&att_args);
+//  pthread_create(&threads[1], NULL, tty_reader, (void *)&att_args);
   pthread_create(&threads[0], NULL, tty_reader, (void *)&gps_args);
 
   pthread_exit(NULL);
