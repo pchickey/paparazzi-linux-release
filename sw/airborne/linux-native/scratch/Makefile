@@ -1,12 +1,15 @@
 
 CC=gcc
-CFLAGS= -pthread -lrt
+CFLAGS=-g -pthread -lrt
 
 
-all : ttytest readgpsqueue
+all : ttytest readgpsqueue readattqueue
 
 readgpsqueue : readgpsqueue.c queues.h
 	$(CC) $(CFLAGS) readgpsqueue.c -o readgpsqueue
+
+readattqueue : readattqueue.c queues.h
+	$(CC) $(CFLAGS) readattqueue.c -o readattqueue
 
 ttytest : ttytest.c queues.h
 	$(CC) $(CFLAGS) ttytest.c -o ttytest
@@ -14,4 +17,4 @@ ttytest : ttytest.c queues.h
 .PHONY: clean
 
 clean:
-	rm ttytest readgpsqueue
+	rm ttytest readgpsqueue readattqueue
