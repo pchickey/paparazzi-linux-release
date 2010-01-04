@@ -155,17 +155,15 @@
 	<define name="HOME_RADIUS" value="100" unit="m"/>
   </section>
  <makefile>
+
 CONFIG = \"linuxfc.h\"
 
 include $(PAPARAZZI_SRC)/conf/autopilot/linuxfc.makefile
 
 ap.CFLAGS +=  -DFBW -DAP -DBOARD_CONFIG=$(CONFIG) -DLED -DTIME_LED=1
-ap.srcs = sys_time.c $(SRC_ARCH)/sys_time_hw.c main_fbw.c main_ap.c main.c
+ap.srcs = sys_time.c $(SRC_ARCH)/sys_time_hw.c $(SRC_ARCH)/fbw.c $(SRC_ARCH)/ap.c $(SRC_ARCH)/main.c
 
 ap.srcs += commands.c
-
-ap.CFLAGS += -DINTER_MCU
-ap.srcs += inter_mcu.c 
 
 ap.CFLAGS += -DACTUATORS=\"servos_hw.h\" -DSERVOS
 ap.srcs += $(SRC_ARCH)/servos_hw.c actuators.c

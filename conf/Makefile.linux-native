@@ -127,7 +127,7 @@ $(BINARY): $(AOBJ) $(COBJARM) $(COBJ)
 
 
 
-# Compile: create object files from C source files. ARM-only
+# Compile: create object files from C source files.
 $(OBJDIR)/%.o : %.c $(OBJDIR)/../Makefile.ac
 	@echo CC $@
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
@@ -143,13 +143,13 @@ $(OBJDIR)/%.o : $(SRC_ARCH)/lpcusb/%.c $(OBJDIR)/../Makefile.ac
 #	@echo CC $@
 #	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
 
-# Assemble: create object files from assembler source files. ARM/Thumb
+# Assemble: create object files from assembler source files.
 $(AOBJ) : $(OBJDIR)/%.o : %.S
 	@echo AS $@
 	$(Q)$(CC) -c $(THUMB) $(ALL_ASFLAGS) $< -o $@
 
 
-# Assemble: create object files from assembler source files. ARM-only
+# Assemble: create object files from assembler source files.
 $(AOBJARM) : $(OBJDIR)/%.o : $(SRC_ARCH)/%.S
 	@echo AS $@
 	$(Q)$(CC) -c $(ALL_ASFLAGS) $< -o $@

@@ -35,10 +35,9 @@
 extern uint32_t cpu_time_ticks;
 extern uint32_t last_periodic_event;
 
-void TIMER0_ISR ( void ) ;
-
-static inline void sys_time_init( void ) {
-}
+void init_sys_time_periodic(void);
+bool_t sys_time_periodic(void);
+void sys_time_init( void );
 
 #define T0_PCLK_DIV = 1000000 // garbage
 
@@ -62,7 +61,7 @@ static inline void sys_time_init( void ) {
 
 #define InitSysTimePeriodic() last_periodic_event = 0; // garbage pch 28dec09
 
-static inline bool_t sys_time_periodic( void ) {
+// static inline bool_t sys_time_periodic( void ) {
 // if ( dif >= PERIODIC_TASK_PERIOD) {
 //    last_periodic_event += PERIODIC_TASK_PERIOD;
 //    cpu_time_ticks += PERIODIC_TASK_PERIOD;
@@ -72,11 +71,11 @@ static inline bool_t sys_time_periodic( void ) {
 //   }
 //    return TRUE;
 //  }
-  return FALSE;
-}
+//   return FALSE;
+// }
 
 /** Busy wait, in microseconds */
-static inline void sys_time_usleep(uint32_t us) {
-}
+// static inline void sys_time_usleep(uint32_t us) {
+// }
 
 #endif /* SYS_TIME_HW_H */
