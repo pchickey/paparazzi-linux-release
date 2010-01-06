@@ -43,6 +43,7 @@ extern bool_t uart0_check_free_space( uint8_t len);
 #define Uart0Init uart0_init
 #define Uart0CheckFreeSpace(_x) uart0_check_free_space(_x)
 #define Uart0Transmit(_x) uart0_transmit(_x)
+#define Uart0NonBlockRead uart_0_nb_read
 #define Uart0SendMessage() {}
 
 #define Uart0TxRunning uart0_tx_running
@@ -59,6 +60,7 @@ extern bool_t uart1_check_free_space( uint8_t len);
 #define Uart1Init uart1_init
 #define Uart1CheckFreeSpace(_x) uart1_check_free_space(_x)
 #define Uart1Transmit(_x) uart1_transmit(_x)
+#define Uart1NonBlockRead uart_1_nb_read
 #define Uart1SendMessage() {}
 
 #define Uart1TxRunning uart1_tx_running
