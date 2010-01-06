@@ -100,12 +100,11 @@ bool_t uart0_check_free_space( uint8_t len) { return TRUE; }
 void uart_0_nb_read(void) 
 {
   ssize_t nr;
-  char read_buf[16];
+  char read_buf[8];
   if (buf_full(&uart0_buf)) return;
 
   // first perform a read into the ringbuf
-  nr = read(fd_uart0, read_buf,(ssize_t)16);
-  printf(">nr: %d\n", nr);
+  nr = read(fd_uart0, read_buf,(ssize_t)8);
   // return true if we just put anything into the ringbuf
   if (nr > 0)
   {
