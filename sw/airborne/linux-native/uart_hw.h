@@ -28,7 +28,7 @@
 #include "std.h"
 #include <inttypes.h>
 
-#define UART_BUF_SIZE 32
+#define UART_BUF_SIZE 1024
 
 struct ringbuf
 {
@@ -46,6 +46,7 @@ uint8_t buf_shift(struct ringbuf *);
   #define Uart0Getch uart_0_get_ch
   bool_t uart_0_ch_available(void);
   uint8_t uart_0_get_ch(void);
+  void uart_0_nb_read(void);
 #endif // USE_UART0
 
 #ifdef USE_UART1
@@ -53,6 +54,6 @@ uint8_t buf_shift(struct ringbuf *);
   #define Uart1Getch uart_1_get_ch
   bool_t uart_1_ch_available(void);
   uint8_t uart_1_get_ch(void);
-
+  void uart_1_nb_read(void);
 #endif // USE_UART1
 #endif /* UART_HW_H */

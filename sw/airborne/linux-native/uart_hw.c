@@ -69,7 +69,6 @@ uint8_t buf_shift(struct ringbuf *buf)
 
 
 #ifdef USE_UART0
-#define UART0_BUF_SIZE 8012
 int fd_uart0;
 struct ringbuf uart0_buf;
 
@@ -78,9 +77,9 @@ void uart0_init(void)
   struct termios tio;
   bzero(&tio,sizeof(tio));
 
-  fd_uart0 = open(UART0_FNAME, O_RDWR | O_NOCTTY | O_NONBLOCK);
+  fd_uart0 = open(UART0_FNAME, O_RDONLY | O_NOCTTY | O_NONBLOCK);
     if (fd_uart0 < 0) { printf("%s ",UART0_FNAME); perror("uart0 open failed"); exit(-1); }
-  tio.c_cflag = UART0_BAUD | CS8 | CREAD;
+  tio.c_cflag = UART0_BAUD | CS8 | CREAD | CLOCAL ;
   tio.c_lflag = ICANON;
   tcflush(fd_uart0, TCIFLUSH);
   tcsetattr(fd_uart0,TCSANOW,&tio);
@@ -100,16 +99,14 @@ bool_t uart0_check_free_space( uint8_t len) { return TRUE; }
 void uart_0_nb_read(void) 
 {
   ssize_t nr;
-  char read_buf[8];
+  char read_buf[1];
+  
   if (buf_full(&uart0_buf)) return;
-
-  // first perform a read into the ringbuf
-  nr = read(fd_uart0, read_buf,(ssize_t)8);
-  // return true if we just put anything into the ringbuf
-  if (nr > 0)
-  {
-    buf_push(&uart0_buf,read_buf, (int) nr);
-  }
+  
+  for(;;)  
+  { nr = read(fd_uart0, read_buf,(ssize_t)1);
+    if (nr <= 0) break;
+    if (buf_push(&uart0_buf, (uint8_t *)read_buf, (int) nr) == FALSE) break;}
 }
 
 bool_t uart_0_ch_available(void)
@@ -129,13 +126,60 @@ uint8_t uart_0_get_ch(void)
 #endif
 
 #ifdef USE_UART1
-void uart1_ISR(void) { return; }
-void uart1_init(void) { return; }  
-void uart1_transmit(unsigned char data ) { return; }
-bool_t uart1_check_free_space( uint8_t len) { return 1; }
+int fd_uart1;
+struct ringbuf uart1_buf;
 
-bool_t uart_1_ch_available(void) { return 0; }
-uint8_t uart_1_get_ch(void) { return 'g'; }
+void uart1_init(void) 
+{
+  struct termios tio;
+  bzero(&tio,sizeof(tio));
+
+  fd_uart1 = open(UART1_FNAME, O_RDONLY | O_NOCTTY | O_NONBLOCK);
+    if (fd_uart1 < 0) { printf("%s ",UART1_FNAME); perror("uart1 open failed"); exit(-1); }
+  tio.c_cflag = UART1_BAUD | CS8 | CREAD | CLOCAL ;
+  tio.c_lflag = ICANON;
+  tcflush(fd_uart1, TCIFLUSH);
+  tcsetattr(fd_uart1,TCSANOW,&tio);
+
+  uart1_buf.head = 0;
+  uart1_buf.tail = 0;
+
+  return; 
+}
+
+void uart1_transmit(unsigned char data ) 
+{ 
+  write(fd_uart1, &data, sizeof(data)); 
+}
+bool_t uart1_check_free_space( uint8_t len) { return TRUE; }
+
+void uart_1_nb_read(void) 
+{
+  ssize_t nr;
+  char read_buf[1];
+  
+  if (buf_full(&uart1_buf)) return;
+  
+  for(;;)  
+  { nr = read(fd_uart1, read_buf,(ssize_t)1);
+    if (nr <= 0) break;
+    if (buf_push(&uart1_buf, (uint8_t *)read_buf, (int) nr) == FALSE) break;}
+}
+
+bool_t uart_1_ch_available(void)
+{  
+  if (buf_empty(&uart1_buf))
+    return FALSE;
+  else
+    return TRUE;
+}
+
+uint8_t uart_1_get_ch(void) 
+{
+  return buf_shift(&uart1_buf);
+}
+
+
 #endif
 
 
