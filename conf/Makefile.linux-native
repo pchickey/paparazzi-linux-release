@@ -26,7 +26,7 @@
 # This is the common Makefile for the arm7-target.
 #
 
-SRC_ARCH = linux-native
+SRC_ARCH=linux-native
 
 BINARY=autopilot-linux
 
@@ -45,27 +45,21 @@ COPY = cp
 # Launch with "make Q=''" to get full command display
 Q=@
 
-# Output format. (can be srec, ihex, binary)
-FORMAT = ihex
-
-#FLASH_MODE=ISP
-
 SRCARM = $($(TARGET).srcs)
-
 
 # Optimization level, can be [0, 1, 2, 3, s].
 # 0 = turn off optimization. s = optimize for size.
-OPT = 2
+OPT=0
 #OPT=3
 
-CSTANDARD = -std=gnu99
+CSTANDARD=-std=gnu99
 
 CINCS = $(INCLUDES) -I $(SRC_ARCH)/include
 
 # Compiler flags.
 CFLAGS = $(CINCS)
 CFLAGS += -O$(OPT)
-# CFLAGS += -malignment-traps
+CFLAGS += -g3
 CFLAGS += -Wall -Wcast-qual -Wimplicit -Wcast-align -Winline
 CFLAGS += -Wpointer-arith -Wswitch
 CFLAGS += -Wredundant-decls -Wreturn-type -Wshadow -Wunused

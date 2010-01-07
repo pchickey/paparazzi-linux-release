@@ -1,5 +1,4 @@
-
-
+#include <unistd.h>
 #include "sys_time.h"
 #include "main_fbw.h"
 #include "main_ap.h"
@@ -17,8 +16,9 @@ int main(void) {
     }
     event_task_fbw();
     event_task_ap();
+    usleep((useconds_t)16667); // 16.667miliseconds corresponds to 60hz. 
+                               // 'time' indicates that user and sys times are v small
   }
-  
   return 0;
 }
 

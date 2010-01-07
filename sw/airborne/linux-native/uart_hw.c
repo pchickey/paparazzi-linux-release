@@ -77,7 +77,7 @@ void uart0_init(void)
   struct termios tio;
   bzero(&tio,sizeof(tio));
 
-  fd_uart0 = open(UART0_FNAME, O_RDONLY | O_NOCTTY | O_NONBLOCK);
+  fd_uart0 = open(UART0_FNAME, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd_uart0 < 0) { printf("%s ",UART0_FNAME); perror("uart0 open failed"); exit(-1); }
   tio.c_cflag = UART0_BAUD | CS8 | CREAD | CLOCAL ;
   tio.c_lflag = ICANON;
@@ -134,7 +134,7 @@ void uart1_init(void)
   struct termios tio;
   bzero(&tio,sizeof(tio));
 
-  fd_uart1 = open(UART1_FNAME, O_RDONLY | O_NOCTTY | O_NONBLOCK);
+  fd_uart1 = open(UART1_FNAME, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd_uart1 < 0) { printf("%s ",UART1_FNAME); perror("uart1 open failed"); exit(-1); }
   tio.c_cflag = UART1_BAUD | CS8 | CREAD | CLOCAL ;
   tio.c_lflag = ICANON;
