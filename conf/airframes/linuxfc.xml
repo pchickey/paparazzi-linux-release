@@ -8,9 +8,10 @@
 
 <airframe name="Generic Linux Flight Computer 0.0.1">
   <servos>
-    <servo name="MOTOR"         no="0" min="1000" neutral="1000" max="2000"/>
-    <servo name="AILEVON_LEFT"  no="2" min="1130" neutral="1575" max="1880"/>
-    <servo name="AILEVON_RIGHT" no="6" min="1980" neutral="1465" max="1170"/>
+    <servo name="THROTTLE"         no="3" min="1000" neutral="1000" max="2000"/>
+    <servo name="AILERON"          no="1" min="1130" neutral="1575" max="1880"/>
+    <servo name="RUDDER"           no="4" min="1980" neutral="1465" max="1170"/>
+    <servo name="ELEVATOR"         no="2" min="1980" neutral="1465" max="1170"/>
   </servos>
 
   <commands>
@@ -20,23 +21,11 @@
     <axis name="RUDDER"    failsafe_value="0"/>
   </commands>
 
-  <rc_commands>
-    <set command="THROTTLE" value="@THROTTLE"/>
-    <set command="ROLL"     value="@ROLL"/>
-    <set command="PITCH"    value="@PITCH"/>
-  </rc_commands>
-
-  <section name="MIXER">
-    <define name="AILEVON_AILERON_RATE" value="0.75"/>
-    <define name="AILEVON_ELEVATOR_RATE" value="0.75"/>
-  </section>
-
-  <command_laws>
-    <let var="aileron"  value="@ROLL  * AILEVON_AILERON_RATE"/>
-    <let var="elevator" value="@PITCH * AILEVON_ELEVATOR_RATE"/>  
-    <set servo="MOTOR"           value="@THROTTLE"/>
-    <set servo="AILEVON_LEFT"  value="$elevator + $aileron"/>
-    <set servo="AILEVON_RIGHT" value="$elevator - $aileron"/>
+<command_laws>
+    <set servo="THROTTLE" value="@THROTTLE"/>
+    <set servo="AILERON"  value="@ROLL"/>
+    <set servo="RUDDER"   value="@RUDDER"/>
+    <set servo="ELEVATOR" value="@PITCH"/>
   </command_laws>
 
   <section name="AUTO1" prefix="AUTO1_">
@@ -52,9 +41,9 @@
   </section>
 
   <section name="INFRARED" prefix="IR_">
-    <define name="ADC_IR1_NEUTRAL" value="512"/>
-    <define name="ADC_IR2_NEUTRAL" value="512"/>
-    <define name="ADC_TOP_NEUTRAL" value="512"/>
+    <define name="ADC_IR1_NEUTRAL" value="400"/>
+    <define name="ADC_IR2_NEUTRAL" value="400"/>
+    <define name="ADC_TOP_NEUTRAL" value="400"/>
 
     <define name="LATERAL_CORRECTION" value="1."/>
     <define name="LONGITUDINAL_CORRECTION" value="1."/>
@@ -75,8 +64,7 @@
 
   <section name="BAT">
     <define name="MILLIAMP_AT_FULL_THROTTLE" value="2000"/>
-
-    <define name="CATASTROPHIC_BAT_LEVEL" value="9.3" unit="V"/>
+    <define name="CATASTROPHIC_BAT_LEVEL" value="-1" unit="V"/>
   </section>
  
   <section name="MISC">
