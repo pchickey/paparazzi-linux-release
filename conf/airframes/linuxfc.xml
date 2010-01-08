@@ -8,10 +8,13 @@
 
 <airframe name="Generic Linux Flight Computer 0.0.1">
   <servos>
-    <servo name="THROTTLE"         no="3" min="1000" neutral="1000" max="2000"/>
-    <servo name="AILERON"          no="1" min="1130" neutral="1575" max="1880"/>
-    <servo name="RUDDER"           no="4" min="1980" neutral="1465" max="1170"/>
-    <servo name="ELEVATOR"         no="2" min="1980" neutral="1465" max="1170"/>
+    <!-- For Pololu Mini-SSC Protocol Output. Channels start at 0,
+         and physical maximums/minimums are set using Maestro setup software. 
+         See http://www.pololu.com/docs/0J40/5.e for more info -->
+    <servo name="AILERON"          no="0" min="0" neutral="128" max="254"/>
+    <servo name="ELEVATOR"         no="1" min="0" neutral="128" max="254"/>
+    <servo name="THROTTLE"         no="2" min="0" neutral="128" max="254"/>
+    <servo name="RUDDER"           no="3" min="0" neutral="128" max="254"/>
   </servos>
 
   <commands>
@@ -21,7 +24,8 @@
     <axis name="RUDDER"    failsafe_value="0"/>
   </commands>
 
-<command_laws>
+  <command_laws>
+    <!-- We're using an aircraft with traditional control surfaces -->
     <set servo="THROTTLE" value="@THROTTLE"/>
     <set servo="AILERON"  value="@ROLL"/>
     <set servo="RUDDER"   value="@RUDDER"/>
@@ -63,6 +67,8 @@
   </section>
 
   <section name="BAT">
+    <!-- I've removed battery tracking, as our flight computer
+         doesn't currently have the hardware to do that -->
     <define name="MILLIAMP_AT_FULL_THROTTLE" value="2000"/>
     <define name="CATASTROPHIC_BAT_LEVEL" value="-1" unit="V"/>
   </section>
@@ -153,7 +159,7 @@ ap.srcs = sys_time.c $(SRC_ARCH)/sys_time_hw.c $(SRC_ARCH)/fbw.c $(SRC_ARCH)/ap.
 
 ap.srcs += commands.c
 
-ap.CFLAGS += -DACTUATORS=\"servos_hw.h\" -DSERVOS
+ap.CFLAGS += -DACTUATORS=\"servos_hw.h\" -DSERVOS -DPOLOLU_PATH=\"/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Micro_Maestro_6-Servo_Controller_00001644-if00\"
 ap.srcs += $(SRC_ARCH)/servos_hw.c actuators.c
 
 ap.CFLAGS += -DDOWNLINK -DUSE_UART1 -DDOWNLINK_TRANSPORT=PprzTransport -DDOWNLINK_FBW_DEVICE=Uart1 -DDOWNLINK_AP_DEVICE=Uart1 -DPPRZ_UART=Uart1 -DDATALINK=PPRZ -DUART1_FNAME=\"/dev/ftdi2\" -DUART1_BAUD=B9600
