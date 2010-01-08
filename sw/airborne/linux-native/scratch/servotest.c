@@ -30,13 +30,15 @@ void servo_send(int fd, int servo, uint8_t value)
 int main (void)
 {
 
-  int fd = open(POLOLU_PATH, O_RDWR | O_NOCTTY);
+  int fd = open(POLOLU_PATH_LONG, O_RDWR | O_NOCTTY);
     if (fd < 0) { printf("%s ", POLOLU_PATH); perror("couldn't open"); exit(-1); }
   struct termios tio;
  
   bzero(&tio, sizeof(tio));
   tio.c_cflag = POLOLU_BAUD | CS8 | CREAD;
   tio.c_lflag = ICANON;
+
+  
 
   int ii;
   uint8_t servo_out;
@@ -46,7 +48,7 @@ int main (void)
     servo_send(fd, 1, servo_out);
     servo_send(fd, 2, servo_out);
     servo_send(fd, 3, servo_out);
-    sleep(1);
+    usleep(20000);
   }
   return 0;
 }
