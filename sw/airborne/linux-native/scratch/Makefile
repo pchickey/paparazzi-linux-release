@@ -4,7 +4,10 @@ CFLAGS=-g -pthread -lrt
 
 PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native
 
-all : uarttest 
+all : servotest
+
+servotest: servotest.c
+	$(CC) $(CFLAGS) -lm servotest.c -o servotest
 
 uarttest: ../uart_hw.c ../uart_hw.h ../../uart.h uart_main.c
 	$(CC) $(CFLAGS) $(PAP_INCLUDES) -DUSE_UART0 -DUART0_FNAME=\"/dev/ftdi3\" -DUART0_BAUD=B38400 \
