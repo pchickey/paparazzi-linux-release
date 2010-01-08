@@ -27,7 +27,9 @@ void actuators_init(void)
 
   int ii;
   for(ii=0; ii < SERVOS_NB; ii++ )
-    servos_values[ii] = 128;
+    servos_values[ii] = 220;
+
+  actuators_send_to_pololu();
 }
 
 void actuators_send_to_pololu(void)

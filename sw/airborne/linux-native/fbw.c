@@ -1,8 +1,9 @@
+#include "actuators.h"
 #include "main_fbw.h"
 
 void init_fbw( void ) 
 {
-  // setup servo output here
+  actuators_init();
   return;
 }
 
