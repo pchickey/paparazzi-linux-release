@@ -1,33 +1,24 @@
-
-
-
 #ifndef SERVOS_HW_H
 #define SERVOS__HW_H
 
 #include <inttypes.h>
 #include "std.h"
+#include "airframe.h"
 
-#include "sys_time.h"
-
-
-#define SERVOS_TICS_OF_USEC(s) s
-#define ChopServo(x,a,b) Chop(x, a, b)
-
-#if defined NB_CHANNELS
-#define _NB_CHANNELS Chop(NB_CHANNELS,0,10)
-#else
-#define _NB_CHANNELS 10
+// don't expect pololu baud to change or matter,
+// since the usb serial device is virtual.
+// I set it through termios for good luck
+#ifndef POLOLU_BAUD
+#define POLOLU_BAUD B9600 
 #endif
 
-#define SERVOS_ISR servos_isr
+// we dont use tics or usecs, but others depend on this macro
+#define SERVOS_TICS_OF_USEC(s) s
 
-
-extern uint16_t servos_values[_NB_CHANNELS];
+extern uint16_t servos_values[SERVOS_NB];
+extern void actuators_send_to_pololu(void);
 
 #define Actuator(i) servos_values[i]
-#define ActuatorsCommit() {}
-
-extern uint8_t servos_idx;
-void servos_isr(void);
+#define ActuatorsCommit() actuators_send_to_pololu()
 
 #endif /* SERVOS_HW_H */
