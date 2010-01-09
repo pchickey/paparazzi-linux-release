@@ -82,7 +82,7 @@ MATH_LIB = -lm
 # Linker flags.
 #LDFLAGS = -n -nostartfiles -Wl,-Map=$(OBJDIR)/$(TARGET).map,--cref
 LDFLAGS += $(MATH_LIB)
-LDFLAGS += -lc
+LDFLAGS += -pthread -lc
 
 # Define all object files.
 COBJ      = $(SRC:%.c=$(OBJDIR)/%.o)
