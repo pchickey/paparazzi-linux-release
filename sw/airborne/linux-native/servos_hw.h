@@ -14,6 +14,8 @@
 
 // we dont use tics or usecs, but others depend on this macro
 #define SERVOS_TICS_OF_USEC(s) s
+#define ChopServo Chop
+
 
 extern uint16_t servos_values[SERVOS_NB];
 extern void actuators_send_to_pololu(void);
