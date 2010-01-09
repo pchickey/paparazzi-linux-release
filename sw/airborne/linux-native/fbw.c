@@ -3,6 +3,7 @@
 
 void init_fbw( void ) 
 {
+  adc_init();
   actuators_init();
   return;
 }
