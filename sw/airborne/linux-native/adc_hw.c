@@ -43,7 +43,6 @@ void *adc_reader(void *macht_nicht)
   tio.c_lflag = ICANON;
   tcflush(adc_fd, TCIFLUSH);
   int res = tcsetattr(adc_fd, TCSANOW, &tio);
-  printf("tcsetattr returned %d\n", res); perror("tcsetattr");
 
   FILE *adc_file;
   adc_file = fdopen(adc_fd, "r");
