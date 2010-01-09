@@ -2,9 +2,13 @@
 CC=gcc
 CFLAGS=-g -pthread -lrt
 
-PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native
+PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native -I/home/pat/paparazzi3/var/LINUXFC/
 
-all : servotest
+all : servo_hw_test
+
+servo_hw_test: servo_hw_test.c
+	$(CC) $(PAP_INCLUDES) -DPOLOLU_PATH=\"/dev/ttyACM0\" -DSERVOS_NB=4 -DPOLOLU_BAUD=B9600 \
+	../servos_hw.c servo_hw_test.c -o servo_hw_test
 
 servotest: servotest.c
 	$(CC) $(CFLAGS) -lm servotest.c -o servotest
@@ -25,4 +29,4 @@ ttytest : ttytest.c queues.h
 .PHONY: clean
 
 clean:
-	rm ttytest readgpsqueue readattqueue
+	rm ttytest readgpsqueue readattqueue servo_hw_test servotest uarttest
