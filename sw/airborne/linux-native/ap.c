@@ -51,6 +51,8 @@
 #include "datalink.h"
 #include "xbee.h"
 
+#include "ap_state.h"
+
 bool_t power_switch;
 uint8_t fatal_error_nb = 0;
 static const uint16_t version = 1;
@@ -84,13 +86,9 @@ static inline uint8_t pprz_mode_update( void ) {
   return FALSE;
 }
 
-// cross yourself three times before writing this mess
-// moved from inter_mcu pch 03jan10
-struct ap_state {
-  pprz_t commands[COMMANDS_NB];
-};
-static struct ap_state _ap_state;
-struct ap_state* ap_state = &_ap_state;
+// using ap_state.h, ap.c and fbw.c share the ap_state_t struct and ap_state pointer
+static struct ap_state_t _ap_state;
+struct ap_state_t* ap_state = &_ap_state;
 
 #define INIT_MSG_NB 2
 

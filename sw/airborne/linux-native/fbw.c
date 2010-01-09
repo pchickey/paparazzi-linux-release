@@ -1,5 +1,7 @@
+#include "airframe.h"
 #include "actuators.h"
 #include "main_fbw.h"
+#include "ap_state.h"
 
 void init_fbw( void ) 
 {
@@ -17,5 +19,6 @@ void event_task_fbw(void)
 /************* PERIODIC ******************************************************/
 void periodic_task_fbw( void ) 
 {
+  SetActuatorsFromCommands(ap_state->commands);
   return;
 }
