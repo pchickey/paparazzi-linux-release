@@ -42,7 +42,7 @@ void *adc_reader(void *macht_nicht)
   tio.c_cflag = ADC_BAUD | CS8 | CREAD;
   tio.c_lflag = ICANON;
   tcflush(adc_fd, TCIFLUSH);
-  int res = tcsetattr(adc_fd, TCSANOW, &tio);
+  tcsetattr(adc_fd, TCSANOW, &tio);
 
   FILE *adc_file;
   adc_file = fdopen(adc_fd, "r");
