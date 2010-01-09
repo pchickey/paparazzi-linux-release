@@ -1,27 +1,13 @@
-/*
- * $Id: adc_hw.c 3726 2009-07-18 18:22:45Z poine $
- *  
- * Copyright (C) 2008  Pascal Brisset, Antoine Drouin
- *
- * This file is part of paparazzi.
- *
- * paparazzi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * paparazzi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with paparazzi; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA. 
- *
- */
-
+#include <fcntl.h>
+#include <strings.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <termios.h>
+#include <pthread.h>
 #include "adc.h"
 
 /** First NB_ADC for bank 0, others for bank 2 */
@@ -37,31 +23,75 @@ void adc_buf_channel(uint8_t adc_channel, struct adc_buf* s, uint8_t av_nb_sampl
   buffers[adc_channel] = s;
   s->av_nb_sample = av_nb_sample;
 }
-void adc_init (void) { return; }
-void adcISR0 (void) { return; }
-void adcISR1 (void) { return; }
 
-/*
-void adcISR0 ( void ) {
-  ISR_ENTRY();
-  uint32_t tmp = AD0GDR;
-  uint8_t  channel = (uint8_t)(tmp >> 24) & 0x07;
-  uint16_t value = (uint16_t)(tmp >> 6) & 0x03FF;
-  adc0_val[channel] = value;
+// below is code by pch and brad lord
 
+void adc_init(void) 
+{ 
+  pthread_t adc_reader_thread;
+  pthread_create(&adc_reader_thread, NULL, adc_reader, NULL);
+}
+
+void *adc_reader(void *macht_nicht)
+{
+  int adc_fd;
+  adc_fd = open(ADC_PATH, O_RDONLY | O_NOCTTY);
+    if (adc_fd < 0) { perror("adc_fd could not be opened"); exit(-1); }
+  struct termios tio;
+  bzero(&tio, sizeof(tio));
+  tio.c_cflag = ADC_BAUD | CS8 | CREAD;
+  tio.c_lflag = ICANON;
+  tcflush(adc_fd, TCIFLUSH);
+  int res = tcsetattr(adc_fd, TCSANOW, &tio);
+  printf("tcsetattr returned %d\n", res); perror("tcsetattr");
+
+  FILE *adc_file;
+  adc_file = fdopen(adc_fd, "r");
+
+  // this fgets is just to get the first line out of the device
+  // the first line might be garbage, the second onwards should be fine
+  char readbuf[255];
+  fgets(readbuf, 255, adc_file);
+
+  int result;
+  // read out the string prefix
+  char prefix;
+  int channel, data;
+  while (1)
+  {
+    result = fscanf(adc_file,"$%c",&prefix);
+    if (result >= 1) 
+    { 
+     if (prefix == 'A')
+     {
+        result = fscanf(adc_file,"%d,%d", &channel, &data);
+        if (result >= 2) 
+        {
+          adc_buffer_insert(channel,data);
+        }
+      fgets(readbuf, 255, adc_file); // flush rest of the line
+      }
+      else // prefix == S (EQ)
+      { 
+        fgets(readbuf, 255, adc_file); // consume the rest of the line
+      }
+    }
+    else // we didn't cach a dollar sign as our first char
+    fgets(readbuf, 255, adc_file); // consume the rest of the line
+  }
+  return 0;
+}
+
+void adc_buffer_insert(int channel, int data)
+{
   struct adc_buf* buf = buffers[channel];
   if (buf) {
     uint8_t new_head = buf->head + 1;
     if (new_head >= buf->av_nb_sample) new_head = 0;
     buf->sum -= buf->values[new_head];
-    buf->values[new_head] = value;
-    buf->sum += value;
+    buf->values[new_head] = data;
+    buf->sum += data;
     buf->head = new_head;   
   }
-  
-  VICVectAddr = 0x00000000;                 // clear this interrupt from the VIC
-  ISR_EXIT();                               // recover registers and return
+  return;
 }
-*/
-
-

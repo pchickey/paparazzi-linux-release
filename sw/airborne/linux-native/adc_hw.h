@@ -28,4 +28,7 @@
 #define AdcBank0(x) (x)
 #define AdcBank1(x) (x+NB_ADC)
 
+void *adc_reader(void *);
+void adc_buffer_insert(int,int);
+
 #endif /* ADC_HW_H */
