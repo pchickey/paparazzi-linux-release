@@ -5,6 +5,7 @@
 #include <termios.h>
 #include <fcntl.h>
 
+#include "std.h"
 #include "actuators.h"
 #include "paparazzi.h"
 #include "airframe.h"
@@ -47,7 +48,11 @@ void servo_send(int fd, int servo, uint8_t value)
   msg[0] = (uint8_t) 0xFF;
   msg[1] = (uint8_t) servo;
   msg[2] = value;
-  write(fd,msg,(ssize_t)3);
+  int written;
+  written = write(fd,msg,(ssize_t)3);
+  // debug pch
+  printf("write servo %d value %d size %d\n", msg[1], msg[2], written);
+
 }
 
  
