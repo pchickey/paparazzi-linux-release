@@ -1,0 +1,186 @@
+# Hey Emacs, this is a -*- makefile -*-
+#   Paparazzi main $Id: Makefile.ac 4198 2009-09-23 19:15:40Z hecto $
+#   Copyright (C) 2004 Pascal Brisset Antoine Drouin
+#
+# This file is part of paparazzi.
+#
+# paparazzi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# paparazzi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with paparazzi; see the file COPYING.  If not, write to
+# the Free Software Foundation, 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.  
+
+# Preprocessing of XML configuration files
+
+PAPARAZZI_SRC=$(shell pwd)
+
+include conf/Makefile.local
+
+CONF=$(PAPARAZZI_HOME)/conf
+CONF_XML=$(CONF)/conf.xml
+AIRBORNE=sw/airborne
+MESSAGES_XML = $(CONF)/messages.xml
+ACINCLUDE = $(PAPARAZZI_HOME)/var/$(AIRCRAFT)
+AIRCRAFT_CONF_DIR = $(ACINCLUDE)/conf
+AIRFRAME_H=$(ACINCLUDE)/airframe.h
+
+ifndef PERIODIC_FREQ
+PERIODIC_FREQ = 60
+endif
+
+PERIODIC_H=$(ACINCLUDE)/periodic.h
+RADIO_H=$(ACINCLUDE)/radio.h
+CONF_RADIO_CONTROL_PPM_H=$(ACINCLUDE)/conf_radio_control_ppm.h
+FLIGHT_PLAN_H=$(ACINCLUDE)/flight_plan.h
+FLIGHT_PLAN_XML=$(ACINCLUDE)/flight_plan.xml
+SETTINGS_H=$(ACINCLUDE)/settings.h
+SETTINGS_XMLS=$(patsubst %,$(CONF)/%,$(SETTINGS))
+SETTINGS_XML=$(ACINCLUDE)/settings.xml
+SETTINGS_MODULES=$(ACINCLUDE)/settings_modules.xml
+MAKEFILE_AC=$(ACINCLUDE)/Makefile.ac
+SETTINGS_FILE=$(SETTINGS:settings%=%)
+#TUNING_FILE=$(subst   ,_,$(SETTINGS:settings/%.xml=%)).h
+TUNING_H=$(ACINCLUDE)/tuning.h
+TUNING_INC_H=$(PAPARAZZI_HOME)/var/include/"$(SETTINGS:settings/%.xml=%).h"
+SUPERVISION=./paparazzi
+MAKE=make PAPARAZZI_SRC=$(PAPARAZZI_SRC) PAPARAZZI_HOME=$(PAPARAZZI_HOME)
+MODULES_H=$(ACINCLUDE)/modules.h
+MODULES_C=$(ACINCLUDE)/modules.c
+MODULES_DIR=$(PAPARAZZI_HOME)/conf/modules/
+AIRCRAFT_MD5=$(AIRCRAFT_CONF_DIR)/aircraft.md5
+
+
+# "make Q=''" to get full echo
+Q=@
+
+init:
+	@[ -d $(PAPARAZZI_HOME) ] || (echo "Copying config example in your $(PAPARAZZI_HOME) directory"; mkdir -p $(PAPARAZZI_HOME); cp -a conf $(PAPARAZZI_HOME); cp -a data $(PAPARAZZI_HOME); mkdir -p $(PAPARAZZI_HOME)/var/maps; mv $(PAPARAZZI_HOME)/data/maps/trtqtttqtsrrt*.jpg $(PAPARAZZI_HOME)/var/maps; mkdir -p $(PAPARAZZI_HOME)/var/include)
+
+demo:
+	$(SUPERVISION)
+
+all_ac_h: $(AIRFRAME_H) $(MODULES_H) $(SETTINGS_H) $(TUNING_H) $(MAKEFILE_AC) $(PERIODIC_H)
+
+radio_ac_h : $(RADIO_H) $(CONF_RADIO_CONTROL_PPM_H)
+
+flight_plan_ac_h : $(FLIGHT_PLAN_H) $(FLIGHT_PLAN_XML)
+
+makefile_ac: $(MAKEFILE_AC)
+
+$(AIRFRAME_H) : $(CONF)/$(AIRFRAME_XML) $(CONF_XML) $(AIRCRAFT_MD5)
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_airframe.out $(AC_ID) $(AIRCRAFT) $(MD5SUM) $< > /tmp/airframe.h
+	$(Q)mv /tmp/airframe.h $@
+	$(Q)cp $(CONF)/airframes/airframe.dtd $(AIRCRAFT_CONF_DIR)/airframes
+
+$(RADIO_H) : $(CONF)/$(RADIO) $(CONF_XML) $(TOOLS)/gen_radio.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_radio.out $< > /tmp/radio.h
+	$(Q)mv /tmp/radio.h $@
+	$(Q)cp $< $(AIRCRAFT_CONF_DIR)/radios
+
+$(CONF_RADIO_CONTROL_PPM_H) : $(CONF)/$(RADIO) $(CONF_XML) $(TOOLS)/gen_conf_radio_control_ppm.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_conf_radio_control_ppm.out $< > /tmp/conf_radio_control_ppm.h
+	$(Q)mv /tmp/conf_radio_control_ppm.h $@
+	$(Q)cp $< $(AIRCRAFT_CONF_DIR)/radios
+
+ifeq ($(MAKECMDGOALS),all_ac_h) 
+-include $(MAKEFILE_AC)
+endif
+
+$(PERIODIC_H) : $(MESSAGES_XML) $(CONF_XML) $(CONF)/$(TELEMETRY) $(MAKEFILE_AC)
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_periodic.out $(MESSAGES_XML) $(CONF)/$(TELEMETRY) $(PERIODIC_FREQ) > $@
+	$(Q)chmod a+r $@
+	$(Q)cp $< $(AIRCRAFT_CONF_DIR)
+	$(Q)cp $(CONF)/$(TELEMETRY) $(AIRCRAFT_CONF_DIR)/telemetry
+
+$(FLIGHT_PLAN_H) : $(CONF)/$(FLIGHT_PLAN) $(CONF_XML) $(TOOLS)/gen_flight_plan.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_flight_plan.out $< > /tmp/$(AC_ID)_fp.h
+	$(Q)mv /tmp/$(AC_ID)_fp.h $@
+	$(Q)chmod a+r $@
+	$(Q)cp $< $(AIRCRAFT_CONF_DIR)/flight_plans
+
+$(FLIGHT_PLAN_XML) : $(CONF)/$(FLIGHT_PLAN) $(CONF_XML) $(TOOLS)/gen_flight_plan.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_flight_plan.out -dump $< > $@
+	$(Q)chmod a+r $@
+
+$(SETTINGS_H) : $(SETTINGS_XMLS) $(CONF_XML) $(SETTINGS_MODULES) $(TOOLS)/gen_settings.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_settings.out $(SETTINGS_XML) $(SETTINGS_XMLS) $(SETTINGS_MODULES) > $@
+	$(Q)chmod a+r $@
+	$(Q)cp $(SETTINGS_XMLS) $(AIRCRAFT_CONF_DIR)/settings
+
+$(TUNING_H) : $(SETTINGS_XMLS) $(CONF_XML) $(TOOLS)/gen_tuning.out
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_tuning.out $(SETTINGS_XMLS) > $@
+	$(Q)cp $@ $(TUNING_INC_H)
+	$(Q)chmod a+r $@ $(TUNING_INC_H)
+
+$(MODULES_H) : $(CONF)/$(AIRFRAME_XML) $(TOOLS)/gen_modules.out $(CONF)/modules/*.xml
+	@echo BUILD $@
+	$(Q)$(TOOLS)/gen_modules.out $(MODULES_DIR) $(MODULES_C) $(SETTINGS_MODULES) $< > $@
+	$(Q)chmod a+r $@
+
+
+ac_h :
+	$(Q)if (expr "$(AIRCRAFT)"); then : ; else echo "AIRCRAFT undefined: type 'make AIRCRAFT=AircraftName ...'"; exit 1; fi
+	@echo BUILD $(AIRCRAFT)
+	$(Q)PAPARAZZI_SRC=$(PAPARAZZI_SRC) PAPARAZZI_HOME=$(PAPARAZZI_HOME) Q=$(Q) $(TOOLS)/gen_aircraft.out $(AIRCRAFT)
+
+%.compile: ac_h
+	cd $(AIRBORNE); $(MAKE) TARGET=$* all
+
+%.wr_fuses: %.compile
+	cd $(AIRBORNE); $(MAKE) TARGET=$* wr_fuses
+
+%.rd_fuses: %.compile
+	cd $(AIRBORNE); $(MAKE) TARGET=$* rd_fuses
+
+%.check_fuses: %.compile
+	cd $(AIRBORNE); $(MAKE) TARGET=$* check_fuses
+
+%.erase: %.compile
+	cd $(AIRBORNE); $(MAKE) TARGET=$* erase
+
+%.upload: %.compile
+	cd $(AIRBORNE); $(MAKE) TARGET=$* upload
+
+# Copy from Makefile, to get it in the paparazzi-bin package
+BOOTLOADER_DEVICE=/dev/ttyUSB0
+tiny_bl.upload:
+	lpc21isp -control $(AIRBORNE)/arm7/test/bootloader/bl.hex $(BOOTLOADER_DEVICE) 38400 12000
+
+sim: ac_h
+	cd $(AIRBORNE); $(MAKE) TARGET=sim ARCHI=sim all
+
+# Rules for backward compatibility (old guys are used to !)
+fbw : fbw.compile
+ap: ap.compile
+upload_fbw: fbw.upload
+upload_ap: ap.upload
+erase_fbw: fbw.erase
+erase_ap: ap.erase
+wr_fuses_ap: ap.wr_fuses
+wr_fuses_fbw: fbw.wr_fuses
+rd_fuses_ap: ap.rd_fuses
+rd_fuses_fbw: fbw.rd_fuses
+check_fuses_ap: ap.check_fuses
+check_fuses_fbw: fbw.check_fuses
+hard_ac ac: ac_h fbw ap
+
+clean_ac :
+	$(Q)if (expr "$(AIRCRAFT)"); then : ; else echo "AIRCRAFT undefined: type 'make AIRCRAFT=AircraftName ...'"; exit 1; fi
+	rm -fr $(PAPARAZZI_HOME)/var/$(AIRCRAFT)
