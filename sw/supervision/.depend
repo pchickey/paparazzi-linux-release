@@ -1,0 +1,14 @@
+paparazzicenter.cmo: pc_control_panel.cmo pc_common.cmo pc_aircraft.cmo \
+    ../lib/ocaml/gtk_tools.cmi ../lib/ocaml/extXml.cmi ../lib/ocaml/env.cmi 
+paparazzicenter.cmx: pc_control_panel.cmx pc_common.cmx pc_aircraft.cmx \
+    ../lib/ocaml/gtk_tools.cmx ../lib/ocaml/extXml.cmx ../lib/ocaml/env.cmx 
+pc_aircraft.cmo: pc_common.cmo ../lib/ocaml/gtk_tools.cmi \
+    ../lib/ocaml/extXml.cmi ../lib/ocaml/env.cmi 
+pc_aircraft.cmx: pc_common.cmx ../lib/ocaml/gtk_tools.cmx \
+    ../lib/ocaml/extXml.cmx ../lib/ocaml/env.cmx 
+pc_common.cmo: ../lib/ocaml/extXml.cmi ../lib/ocaml/env.cmi 
+pc_common.cmx: ../lib/ocaml/extXml.cmx ../lib/ocaml/env.cmx 
+pc_control_panel.cmo: pc_common.cmo ../lib/ocaml/gtk_tools.cmi \
+    ../lib/ocaml/extXml.cmi ../lib/ocaml/env.cmi 
+pc_control_panel.cmx: pc_common.cmx ../lib/ocaml/gtk_tools.cmx \
+    ../lib/ocaml/extXml.cmx ../lib/ocaml/env.cmx 
