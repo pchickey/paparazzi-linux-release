@@ -1,0 +1,196 @@
+/home/pat/paparazzi3/var/LINUXFC/ap/sys_time.o: sys_time.c sys_time.h \
+  /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  /home/pat/paparazzi3/sw/include/std.h
+/home/pat/paparazzi3/var/LINUXFC/ap/sys_time_hw.o: linux-native/sys_time_hw.c \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/sys_time.h \
+  /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  linux-native/servos_hw.h /home/pat/paparazzi3/var/LINUXFC/airframe.h
+/home/pat/paparazzi3/var/LINUXFC/ap/fbw.o: linux-native/fbw.c /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/sw/airborne/actuators.h \
+  /home/pat/paparazzi3/sw/airborne/paparazzi.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/servos_hw.h \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/main_fbw.h \
+  /home/pat/paparazzi3/sw/airborne/adc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/adc_hw.h \
+  linux-native/ap_state.h
+/home/pat/paparazzi3/var/LINUXFC/ap/ap.o: linux-native/ap.c /home/pat/paparazzi3/sw/airborne/main_ap.h \
+  linux-native/init_hw.h /home/pat/paparazzi3/sw/airborne/adc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/adc_hw.h \
+  /home/pat/paparazzi3/sw/airborne/fw_h_ctl.h \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/paparazzi.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/sw/airborne/fw_v_ctl.h \
+  /home/pat/paparazzi3/sw/airborne/gps.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h \
+  /home/pat/paparazzi3/sw/airborne/gps_ubx.h \
+  /home/pat/paparazzi3/sw/airborne/uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h \
+  /home/pat/paparazzi3/sw/airborne/infrared.h \
+  /home/pat/paparazzi3/sw/airborne/ap_downlink.h \
+  /home/pat/paparazzi3/sw/airborne/downlink.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h \
+  /home/pat/paparazzi3/var/include/messages.h \
+  /home/pat/paparazzi3/sw/airborne/pprz_transport.h \
+  /home/pat/paparazzi3/sw/airborne/datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h \
+  /home/pat/paparazzi3/sw/airborne/modem.h \
+  /home/pat/paparazzi3/sw/airborne/xbee.h \
+  /home/pat/paparazzi3/sw/airborne/xbee24.h \
+  /home/pat/paparazzi3/var/LINUXFC/periodic.h \
+  /home/pat/paparazzi3/sw/airborne/fw_h_ctl_a.h \
+  /home/pat/paparazzi3/sw/airborne/nav.h \
+  /home/pat/paparazzi3/sw/airborne/fw_v_ctl.h \
+  /home/pat/paparazzi3/sw/airborne/nav_survey_rectangle.h \
+  /home/pat/paparazzi3/sw/airborne/nav.h \
+  /home/pat/paparazzi3/sw/airborne/common_nav.h \
+  /home/pat/paparazzi3/sw/airborne/autopilot.h \
+  /home/pat/paparazzi3/sw/airborne/sys_time.h \
+  /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  /home/pat/paparazzi3/sw/airborne/estimator.h \
+  /home/pat/paparazzi3/var/LINUXFC/settings.h \
+  /home/pat/paparazzi3/sw/airborne/downlink.h \
+  /home/pat/paparazzi3/sw/airborne/gps_ubx.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h \
+  /home/pat/paparazzi3/sw/airborne/sys_time.h \
+  /home/pat/paparazzi3/var/LINUXFC/flight_plan.h \
+  /home/pat/paparazzi3/sw/airborne/nav_line.h \
+  /home/pat/paparazzi3/sw/airborne/datalink.h \
+  /home/pat/paparazzi3/sw/airborne/xbee.h linux-native/ap_state.h
+/home/pat/paparazzi3/var/LINUXFC/ap/main.o: linux-native/main.c /home/pat/paparazzi3/sw/airborne/sys_time.h \
+  /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/main_fbw.h \
+  /home/pat/paparazzi3/sw/airborne/adc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/adc_hw.h \
+  /home/pat/paparazzi3/sw/airborne/main_ap.h
+/home/pat/paparazzi3/var/LINUXFC/ap/commands.o: commands.c commands.h paparazzi.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h
+/home/pat/paparazzi3/var/LINUXFC/ap/servos_hw.o: linux-native/servos_hw.c \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/actuators.h \
+  /home/pat/paparazzi3/sw/airborne/paparazzi.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/servos_hw.h \
+  /home/pat/paparazzi3/sw/airborne/paparazzi.h
+/home/pat/paparazzi3/var/LINUXFC/ap/actuators.o: actuators.c actuators.h paparazzi.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/servos_hw.h \
+  /home/pat/paparazzi3/sw/include/std.h
+/home/pat/paparazzi3/var/LINUXFC/ap/downlink.o: downlink.c /home/pat/paparazzi3/sw/include/std.h
+/home/pat/paparazzi3/var/LINUXFC/ap/uart_hw.o: linux-native/uart_hw.c /home/pat/paparazzi3/sw/airborne/uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h \
+  /home/pat/paparazzi3/sw/include/std.h
+/home/pat/paparazzi3/var/LINUXFC/ap/datalink.o: datalink.c datalink.h /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h common_nav.h \
+  /home/pat/paparazzi3/var/LINUXFC/settings.h \
+  /home/pat/paparazzi3/sw/airborne/autopilot.h \
+  /home/pat/paparazzi3/sw/airborne/sys_time.h \
+  /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/sw/airborne/downlink.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h \
+  /home/pat/paparazzi3/var/include/messages.h \
+  /home/pat/paparazzi3/sw/airborne/pprz_transport.h \
+  /home/pat/paparazzi3/sw/airborne/datalink.h \
+  /home/pat/paparazzi3/sw/airborne/modem.h \
+  /home/pat/paparazzi3/sw/airborne/xbee.h \
+  /home/pat/paparazzi3/sw/airborne/xbee24.h \
+  /home/pat/paparazzi3/sw/airborne/estimator.h \
+  /home/pat/paparazzi3/sw/airborne/gps_ubx.h \
+  /home/pat/paparazzi3/sw/airborne/infrared.h \
+  /home/pat/paparazzi3/sw/airborne/nav.h \
+  /home/pat/paparazzi3/sw/airborne/paparazzi.h \
+  /home/pat/paparazzi3/sw/airborne/fw_v_ctl.h \
+  /home/pat/paparazzi3/sw/airborne/nav_survey_rectangle.h \
+  /home/pat/paparazzi3/sw/airborne/nav.h \
+  /home/pat/paparazzi3/sw/airborne/common_nav.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h latlong.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h downlink.h \
+  ap_downlink.h /home/pat/paparazzi3/var/LINUXFC/periodic.h fw_h_ctl_a.h \
+  paparazzi.h
+/home/pat/paparazzi3/var/LINUXFC/ap/pprz_transport.o: pprz_transport.c pprz_transport.h \
+  /home/pat/paparazzi3/sw/include/std.h datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h
+/home/pat/paparazzi3/var/LINUXFC/ap/adc_hw.o: linux-native/adc_hw.c /home/pat/paparazzi3/sw/airborne/adc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/adc_hw.h
+/home/pat/paparazzi3/var/LINUXFC/ap/gps_ubx.o: gps_ubx.c /home/pat/paparazzi3/var/LINUXFC/flight_plan.h \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/nav_line.h \
+  /home/pat/paparazzi3/sw/airborne/datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h gps.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h gps_ubx.h nav.h \
+  paparazzi.h fw_v_ctl.h nav_survey_rectangle.h common_nav.h latlong.h \
+  /home/pat/paparazzi3/var/include/ubx_protocol.h
+/home/pat/paparazzi3/var/LINUXFC/ap/gps.o: gps.c gps.h /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h gps_ubx.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h latlong.h \
+  sys_time.h /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  /home/pat/paparazzi3/var/LINUXFC/periodic.h \
+  /home/pat/paparazzi3/var/include/messages.h downlink.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h pprz_transport.h datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h modem.h xbee.h xbee24.h
+/home/pat/paparazzi3/var/LINUXFC/ap/latlong.o: latlong.c /home/pat/paparazzi3/sw/include/std.h latlong.h \
+  led.h /home/pat/paparazzi3/sw/airborne/linux-native/led_hw.h
+/home/pat/paparazzi3/var/LINUXFC/ap/infrared.o: infrared.c adc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/adc_hw.h infrared.h \
+  /home/pat/paparazzi3/sw/include/std.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h gps.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h gps_ubx.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h autopilot.h \
+  sys_time.h /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h estimator.h \
+  ap_downlink.h downlink.h /home/pat/paparazzi3/var/LINUXFC/modules.h \
+  /home/pat/paparazzi3/var/include/messages.h pprz_transport.h datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h modem.h xbee.h xbee24.h \
+  /home/pat/paparazzi3/var/LINUXFC/periodic.h fw_h_ctl_a.h paparazzi.h
+/home/pat/paparazzi3/var/LINUXFC/ap/estimator.o: estimator.c estimator.h \
+  /home/pat/paparazzi3/sw/include/std.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h ap_downlink.h \
+  /home/pat/paparazzi3/var/LINUXFC/airframe.h downlink.h \
+  /home/pat/paparazzi3/var/LINUXFC/modules.h \
+  /home/pat/paparazzi3/var/include/messages.h pprz_transport.h datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h modem.h xbee.h xbee24.h \
+  /home/pat/paparazzi3/var/LINUXFC/periodic.h fw_h_ctl_a.h paparazzi.h \
+  gps.h /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h gps_ubx.h \
+  nav.h fw_v_ctl.h nav_survey_rectangle.h common_nav.h
+/home/pat/paparazzi3/var/LINUXFC/ap/nav.o: nav.c nav.h /home/pat/paparazzi3/sw/include/std.h paparazzi.h \
+  fw_v_ctl.h nav_survey_rectangle.h common_nav.h gps.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/gps_hw.h gps_ubx.h uart.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/uart_hw.h estimator.h \
+  fw_h_ctl.h /home/pat/paparazzi3/var/LINUXFC/airframe.h autopilot.h \
+  sys_time.h /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h inter_mcu.h \
+  cam.h traffic_info.h latlong.h \
+  /home/pat/paparazzi3/var/LINUXFC/flight_plan.h \
+  /home/pat/paparazzi3/sw/airborne/nav_line.h \
+  /home/pat/paparazzi3/sw/airborne/datalink.h \
+  /home/pat/paparazzi3/var/include/dl_protocol.h common_nav.c
+/home/pat/paparazzi3/var/LINUXFC/ap/fw_h_ctl.o: fw_h_ctl.c /home/pat/paparazzi3/sw/include/std.h led.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/led_hw.h fw_h_ctl.h \
+  paparazzi.h /home/pat/paparazzi3/var/LINUXFC/airframe.h estimator.h \
+  nav.h fw_v_ctl.h nav_survey_rectangle.h common_nav.h autopilot.h \
+  sys_time.h /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h
+/home/pat/paparazzi3/var/LINUXFC/ap/fw_v_ctl.o: fw_v_ctl.c fw_v_ctl.h paparazzi.h estimator.h \
+  /home/pat/paparazzi3/sw/include/std.h nav.h nav_survey_rectangle.h \
+  common_nav.h /home/pat/paparazzi3/var/LINUXFC/airframe.h autopilot.h \
+  sys_time.h /home/pat/paparazzi3/conf/autopilot/linuxfc.h \
+  /home/pat/paparazzi3/sw/airborne/linux-native/sys_time_hw.h
+/home/pat/paparazzi3/var/LINUXFC/ap/nav_line.o: nav_line.c /home/pat/paparazzi3/var/LINUXFC/airframe.h \
+  nav_line.h /home/pat/paparazzi3/sw/include/std.h nav.h paparazzi.h \
+  fw_v_ctl.h nav_survey_rectangle.h common_nav.h
+/home/pat/paparazzi3/var/LINUXFC/ap/nav_survey_rectangle.o: nav_survey_rectangle.c nav_survey_rectangle.h \
+  nav.h /home/pat/paparazzi3/sw/include/std.h paparazzi.h fw_v_ctl.h \
+  common_nav.h estimator.h

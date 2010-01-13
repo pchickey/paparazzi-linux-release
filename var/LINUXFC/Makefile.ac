@@ -1,0 +1,20 @@
+# This file has been generated from /home/pat/paparazzi3/conf/airframes/linuxfc.xml by /home/pat/paparazzi3/sw/tools/gen_aircraft.ml
+# Please DO NOT EDIT
+CONFIG = \"linuxfc.h\"
+include $(PAPARAZZI_SRC)/conf/autopilot/linuxfc.makefile
+ap.CFLAGS +=  -DFBW -DAP -DBOARD_CONFIG=$(CONFIG) -DLED -DTIME_LED=1
+ap.srcs = sys_time.c $(SRC_ARCH)/sys_time_hw.c $(SRC_ARCH)/fbw.c $(SRC_ARCH)/ap.c $(SRC_ARCH)/main.c
+ap.srcs += commands.c
+ap.CFLAGS += -DACTUATORS=\"servos_hw.h\" -DSERVOS -DPOLOLU_PATH=\"/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Micro_Maestro_6-Servo_Controller_00001644-if00\"
+ap.srcs += $(SRC_ARCH)/servos_hw.c actuators.c
+ap.CFLAGS += -DDOWNLINK -DUSE_UART1 -DDOWNLINK_TRANSPORT=PprzTransport -DDOWNLINK_FBW_DEVICE=Uart1 -DDOWNLINK_AP_DEVICE=Uart1 -DPPRZ_UART=Uart1 -DDATALINK=PPRZ -DUART1_FNAME=\"/dev/ftdi2\" -DUART1_BAUD=B9600
+ap.srcs += downlink.c $(SRC_ARCH)/uart_hw.c datalink.c pprz_transport.c
+ap.CFLAGS += -DADC -DUSE_ADC_0 -DUSE_ADC_1 -DUSE_ADC_2 -DUSE_ADC_3 -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B19200
+ap.srcs += $(SRC_ARCH)/adc_hw.c
+ap.CFLAGS += -DGPS -DUBX -DUSE_UART0 -DGPS_LINK=Uart0 -DUART0_BAUD=B38400 -DUART0_FNAME=\"/dev/ftdi3\"
+ap.srcs += gps_ubx.c gps.c latlong.c
+ap.CFLAGS += -DINFRARED -DALT_KALMAN
+ap.srcs += infrared.c estimator.c
+ap.CFLAGS += -DNAV -DAGR_CLIMB -DLOITER_TRIM
+ap.srcs += nav.c fw_h_ctl.c fw_v_ctl.c
+ap.srcs += nav_line.c nav_survey_rectangle.c
