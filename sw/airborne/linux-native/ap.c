@@ -550,7 +550,9 @@ void init_ap( void ) {
 
 /*********** EVENT ***********************************************************/
 void event_task_ap( void ) {
-
+  if (GpsBuffer()) {
+    ReadGpsBuffer();
+  }
   if (gps_msg_received) {
     /* parse and use GPS messages */
       parse_gps_msg();

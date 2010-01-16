@@ -51,7 +51,7 @@ void servo_send(int fd, int servo, uint8_t value)
   int written;
   written = write(fd,msg,(ssize_t)3);
   // debug pch
-  printf("write servo %d value %d size %d\n", msg[1], msg[2], written);
+  // printf("write servo %d value %d size %d\n", msg[1], msg[2], written);
 
 }
 
