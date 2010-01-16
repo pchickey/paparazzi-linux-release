@@ -90,23 +90,9 @@ struct ap_state_t* ap_state = &_ap_state;
 
 uint8_t ac_ident = AC_ID;
 
-/** \fn inline void periodic_task( void )
- *  \brief Do periodic tasks at 60 Hz
- */
-/**There are four @@@@@ boucles @@@@@:
- * - 20 Hz:
- *   - lets use \a reporting_task at 60 Hz
- *   - updates ir with \a ir_update
- *   - updates estimator of ir with \a estimator_update_state_infrared
- *   - set \a desired_aileron and \a desired_elevator with \a pid_attitude_loop
- *   - sends to \a fbw \a desired_throttle, \a desired_aileron and
- *     \a desired_elevator \note \a desired_throttle is set upon GPS
- *     message reception
- * - 4 Hz:
- *   - calls \a estimator_propagate_state
- *   - do navigation with \a navigation_task
- *
- */
+void navigation_task(void);
+void reporting_task(void);
+
 
 void periodic_task_ap( void ) {
   static uint8_t _20Hz   = 0;
@@ -127,9 +113,7 @@ void periodic_task_ap( void ) {
   
   if (!_1Hz) {
     if (estimator_flight_time) estimator_flight_time++;
-#if defined DATALINK || defined SITL
     datalink_time++;
-#endif
 
   }
   switch(_4Hz) {
@@ -213,7 +197,7 @@ void event_task_ap( void ) {
 
 
 
-static inline void reporting_task( void ) 
+void reporting_task( void ) 
 {
   static uint8_t boot = TRUE;
 
@@ -228,11 +212,9 @@ static inline void reporting_task( void )
   }
 }
 
-/** \fn void navigation_task( void )
- *  \brief Compute desired_course
- */
-static void navigation_task( void ) {
-#if defined FAILSAFE_DELAY_WITHOUT_GPS
+void navigation_task( void ) 
+{
+  #if defined FAILSAFE_DELAY_WITHOUT_GPS
   /** This section is used for the failsafe of GPS */
   static uint8_t last_pprz_mode;
 
@@ -254,7 +236,7 @@ static void navigation_task( void ) {
       PERIODIC_SEND_PPRZ_MODE(DefaultChannel);
     }
   }
-#endif /* GPS && FAILSAFE_DELAY_WITHOUT_GPS */
+  #endif /* GPS && FAILSAFE_DELAY_WITHOUT_GPS */
   
   common_nav_periodic_task_4Hz();
   if (pprz_mode == PPRZ_MODE_HOME)
@@ -264,13 +246,9 @@ static void navigation_task( void ) {
   else
     nav_periodic_task();
   
-#ifdef TCAS
-  CallTCAS();
-#endif
-
-#ifndef PERIOD_NAVIGATION_DefaultChannel_0 // If not sent periodically (in default 0 mode)
+  #ifndef PERIOD_NAVIGATION_DefaultChannel_0 // If not sent periodically (in default 0 mode)
   SEND_NAVIGATION(DefaultChannel);
-#endif
+  #endif
 
   SEND_CAM(DefaultChannel);
   
@@ -282,10 +260,10 @@ static void navigation_task( void ) {
 
   if (pprz_mode == PPRZ_MODE_AUTO2 || pprz_mode == PPRZ_MODE_HOME
 			|| pprz_mode == PPRZ_MODE_GPS_OUT_OF_ORDER) {
-#ifdef H_CTL_RATE_LOOP
+  #ifdef H_CTL_RATE_LOOP
     /* Be sure to be in attitude mode, not roll */
     h_ctl_auto1_rate = FALSE;
-#endif
+  #endif
     if (lateral_mode >=LATERAL_MODE_COURSE)
       h_ctl_course_loop(); /* aka compute nav_desired_roll */
     if (v_ctl_mode >= V_CTL_MODE_AUTO_CLIMB)
@@ -293,16 +271,16 @@ static void navigation_task( void ) {
     if (v_ctl_mode == V_CTL_MODE_AUTO_THROTTLE)
       v_ctl_throttle_setpoint = nav_throttle_setpoint;
 
-#if defined V_CTL_THROTTLE_IDLE
+  #if defined V_CTL_THROTTLE_IDLE
     Bound(v_ctl_throttle_setpoint, TRIM_PPRZ(V_CTL_THROTTLE_IDLE*MAX_PPRZ), MAX_PPRZ);
-#endif
+  #endif
 
-#ifdef V_CTL_POWER_CTL_BAT_NOMINAL
+  #ifdef V_CTL_POWER_CTL_BAT_NOMINAL
     if (vsupply > 0.) {
       v_ctl_throttle_setpoint *= 10. * V_CTL_POWER_CTL_BAT_NOMINAL / (float)vsupply;
       v_ctl_throttle_setpoint = TRIM_UPPRZ(v_ctl_throttle_setpoint);
     }
-#endif
+  #endif
 
     h_ctl_pitch_setpoint = nav_pitch;
     Bound(h_ctl_pitch_setpoint, H_CTL_PITCH_MIN_SETPOINT, H_CTL_PITCH_MAX_SETPOINT);
@@ -312,12 +290,4 @@ static void navigation_task( void ) {
   energy += ((float)current) / 3600.0f * 0.25f;	// mAh = mA * dt (4Hz -> hours)
 }
 
-
-#ifndef KILL_MODE_DISTANCE
-#define KILL_MODE_DISTANCE (1.5*MAX_DIST_FROM_HOME)
-#endif 
-
-
-/** Maximum time allowed for low battery level */
-#define LOW_BATTERY_DELAY 5
 
