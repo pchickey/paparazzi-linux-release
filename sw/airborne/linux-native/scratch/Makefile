@@ -4,7 +4,11 @@ CFLAGS=-g -pthread -lrt
 
 PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native -I/home/pat/paparazzi3/var/LINUXFC/
 
-all : servo_hw_test
+all : fopentty
+
+fopentty: fopen_tty.c
+	$(CC) -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B19200 \
+	fopen_tty.c -o fopentty
 
 servo_hw_test: servo_hw_test.c
 	$(CC) $(PAP_INCLUDES) -DPOLOLU_PATH=\"/dev/ttyACM0\" -DSERVOS_NB=4 -DPOLOLU_BAUD=B9600 \
