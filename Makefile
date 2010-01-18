@@ -60,8 +60,7 @@ ARMGCC=/usr/bin/arm-elf-gcc
 
 all: static conf
 
-static : static_h
-#static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib
+static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib
 
 conf: conf/conf.xml conf/control_panel.xml
 
@@ -121,6 +120,7 @@ $(DL_PROTOCOL_H) : $(MESSAGES_XML) $(TOOLS)/gen_messages.out
 	$(Q)mv /tmp/dl.h $@
 
 include Makefile.ac
+include Makefile.portable
 
 sim : sim_static
 
