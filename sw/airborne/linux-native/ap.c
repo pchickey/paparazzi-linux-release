@@ -29,7 +29,6 @@
  * aircraft attitude and running the different control loops
  */
 
-#define MODULES_C
 
 #include <math.h>
 
@@ -51,6 +50,7 @@
 #include "datalink.h"
 #include "xbee.h"
 
+#include "uart.h"
 #include "ap_state.h"
 
 bool_t power_switch;
@@ -166,11 +166,13 @@ void init_ap( void ) {
 
 /*********** EVENT ***********************************************************/
 void event_task_ap( void ) {
+  
+  GpsLink(NonBlockRead());
   if (GpsBuffer()) {
     ReadGpsBuffer();
-  }
+  } 
+  
   if (gps_msg_received) {
-    /* parse and use GPS messages */
       parse_gps_msg();
     gps_msg_received = FALSE;
     if (gps_pos_available) {
@@ -181,6 +183,7 @@ void event_task_ap( void ) {
     }
   }
 
+  PprzLink(NonBlockRead());
   if (PprzBuffer()) {
     ReadPprzBuffer();
     if (pprz_msg_received) {
