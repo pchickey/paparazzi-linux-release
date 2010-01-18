@@ -195,7 +195,7 @@ static inline void pprz_parse_payload(void) {
 #define PprzLink(_x) _PprzLink(PPRZ_UART, _x)
 
 #define PprzBuffer() PprzLink(ChAvailable())
-#define ReadPprzBuffer() { while (PprzLink(ChAvailable())&&!pprz_msg_received) parse_pprz(PprzLink(Getch())); }
+#define ReadPprzBuffer() { PprzLink(NonBlockRead()); while (PprzLink(ChAvailable())&&!pprz_msg_received) parse_pprz(PprzLink(Getch())); }
 
 
 #endif /* PPRZ_TRANSPORT_H */
