@@ -81,6 +81,7 @@ void uart0_init(void)
     if (fd_uart0 < 0) { printf("%s ",UART0_FNAME); perror("uart0 open failed"); exit(-1); }
   tio.c_cflag = UART0_BAUD | CS8 | CREAD | CLOCAL ;
   tio.c_lflag = ICANON;
+  cfmakeraw(&tio);
   tcflush(fd_uart0, TCIFLUSH);
   tcsetattr(fd_uart0,TCSANOW,&tio);
 
@@ -138,6 +139,7 @@ void uart1_init(void)
     if (fd_uart1 < 0) { printf("%s ",UART1_FNAME); perror("uart1 open failed"); exit(-1); }
   tio.c_cflag = UART1_BAUD | CS8 | CREAD | CLOCAL ;
   tio.c_lflag = ICANON;
+  cfmakeraw(&tio); // enable raw mode
   tcflush(fd_uart1, TCIFLUSH);
   tcsetattr(fd_uart1,TCSANOW,&tio);
 
