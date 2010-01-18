@@ -27,12 +27,11 @@
  *
  */
 
-#ifndef UART_H
-#define UART_H
-
 #include "uart_hw.h"
 #include "std.h"
 
+#ifndef UART_H
+#define UART_H
 
 #ifdef USE_UART0
 
