@@ -7,7 +7,7 @@ PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborn
 all : libgpstest
 
 libgpstest: ../gps_libgps.c libgpstest.c
-	$(CC) $(PAP_INCLUDES) -lgps -pthread libgpstest.c -o libgpstest
+	$(CC) $(PAP_INCLUDES) -lgps libgpstest.c -o libgpstest
 
 fopentty: fopen_tty.c
 	$(CC) -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B19200 \
