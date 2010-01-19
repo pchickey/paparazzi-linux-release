@@ -52,18 +52,24 @@ uint8_t gps_numSV;
 
 void gps_init(void)
 {
-  struct gps_data_t libgps_con; 
+  struct gps_data_t gps_con; 
   int res;
-  res = gps_open_r("localhost", "2947", &libgps_con);
+  res = gps_open_r("localhost", "2947", &gps_con);
     if (res < 0) { perror("libgps open failed"); exit(-1); }
-  gps_stream(&libgps_con, WATCH_ENABLE, NULL);
+  gps_stream(&gps_con, WATCH_ENABLE, NULL);
   
   pthread_t gps_update_thread;
-  pthread_create(&gps_update_thread, NULL, &gps_update, NULL);
+  pthread_create(&gps_update_thread, NULL, &gps_update, (void *)&gps_con);
 }
 
-void *gps_update (void *macht_nicht)
+void *gps_update(void *gps_con_a)
 {
+  struct gps_data_t *gps_con = (struct gps_data_t *) gps_con_a;
   printf("calling gps_update\n");
+  while(1)
+  {
+    gps_poll(gps_con);
+    printf("gps polled: status %d lat %f lon %f time %f \n", gps_con->status, gps_con->fix.latitude, gps_con->fix.longitude, gps_con->fix.time);
+  } 
 }
 
