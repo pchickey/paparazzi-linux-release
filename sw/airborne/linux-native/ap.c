@@ -22,23 +22,16 @@
  *
  */
 
-/** \file main_ap.c
- *  \brief AP ( AutoPilot ) process
- *
- *   This process is reponsible for the collecting the different sensors data, fusing them to obtain
- * aircraft attitude and running the different control loops
- */
-
+/* Modifications by Pat Hickey (pat@moreproductive.org), Jan 2010, for Linux port */
 
 #include <math.h>
-
 #include "main_ap.h"
 
 #include "init_hw.h"
 #include "adc.h"
 #include "fw_h_ctl.h"
 #include "fw_v_ctl.h"
-#include "gps.h"
+#include "gps_ppz.h"
 #include "infrared.h"
 #include "ap_downlink.h"
 #include "nav.h"
