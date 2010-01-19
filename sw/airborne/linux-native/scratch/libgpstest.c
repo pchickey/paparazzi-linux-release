@@ -7,9 +7,5 @@ int main (void)
 {
   gps_init();
   printf("gps initialized successfully\n");
-  while(1)
-  {
-    gps_update();
-    usleep(16000);
-  }
+  pause(); // work done by thread spawned in gps_init
 }
