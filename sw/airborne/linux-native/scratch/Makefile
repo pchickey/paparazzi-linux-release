@@ -4,7 +4,10 @@ CFLAGS=-g -pthread -lrt
 
 PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native -I/home/pat/paparazzi3/var/LINUXFC/
 
-all : fopentty
+all : libgpstest
+
+libgpstest: ../gps_libgps.c libgpstest.c
+	$(CC) $(PAP_INCLUDES) -lgps -pthread libgpstest.c -o libgpstest
 
 fopentty: fopen_tty.c
 	$(CC) -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B19200 \
@@ -33,4 +36,6 @@ ttytest : ttytest.c queues.h
 .PHONY: clean
 
 clean:
-	rm ttytest readgpsqueue readattqueue servo_hw_test servotest uarttest
+	rm libgpstest
+	
+#rm ttytest readgpsqueue readattqueue servo_hw_test servotest uarttest
