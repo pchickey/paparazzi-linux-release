@@ -6,4 +6,5 @@ int main (void)
 {
   gps_init();
   printf("gps initialized successfully\n");
+  pause();
 }
