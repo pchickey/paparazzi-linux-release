@@ -2,11 +2,16 @@
 // Pat Hickey 18 Jan 2010
 // This file is part of paparazzi and is licensed by the GPL
 
-// refer to `man 3 libgps` for information about the c library
-// and http://gpsd.berlios.de/ for information about the gpsd daemon.
-// for this code to work, you'll need to configure gpsd separately.
+// This code uses the latest release of gpsd, 2.90. This version
+// of gpsd breaks compatibility with previous releases. Please check
+// your version if you get compile or runtime errors.
 
-// this code eliminates the parsing of NMEA sentences or UBX messages, 
+// Don't refer to `man 3 libgps` for information about the c library
+// http://gpsd.berlios.de/libgps.html has more recent for information 
+// about the library. It is also the best source on the gpsd daemon.
+// For this code to work, you'll need to configure gpsd separately.
+
+// This code eliminates the parsing of NMEA sentences or UBX messages, 
 // using the more capable gpsd instead. gpsd also supports multiple
 // connections, so that you can use gps in multiple applications.
 
@@ -20,7 +25,8 @@
 #include <gps.h> // libgps
 
 #include "std.h"
-#include "gps_ppz.h" // paparazzi gps
+#include "gps_ppz.h" // paparazzi gps had to be renamed because of naming conflict
+#include "gps_libgps.h" // prototypes for these functions
 
 // These global variables come right from gps_ubx.c:
 uint8_t gps_mode;
@@ -43,24 +49,21 @@ uint32_t gps_Pacc, gps_Sacc;
 uint8_t gps_numSV;
 
 // Variables used within gps_libgps.c:
-void gps_callback(struct gps_data_t *, char *, size_t, int);
 
 void gps_init(void)
 {
-  struct gps_data_t *libgps_con; 
-  libgps_con = gps_open("localhost", "2947");
-    if (libgps_con == NULL) { perror("libgps open returned NULL"); exit(-1); }
+  struct gps_data_t libgps_con; 
+  int res;
+  res = gps_open_r("localhost", "2947", &libgps_con);
+    if (res < 0) { perror("libgps open failed"); exit(-1); }
+  gps_stream(&libgps_con, WATCH_ENABLE, NULL);
   
-  pthread_t callback_thread; 
-  gps_set_callback(libgps_con, &gps_callback, &callback_thread);
-  
+  pthread_t gps_update_thread;
+  pthread_create(&gps_update_thread, NULL, &gps_update, NULL);
 }
 
-void gps_callback(struct gps_data_t *gps_data, char *buf, size_t len, int level)
+void *gps_update (void *macht_nicht)
 {
-  printf("gps_callback called\n");
-
-
-
-
+  printf("calling gps_update\n");
 }
+
