@@ -32,7 +32,6 @@
 
 #include "adc.h"
 #include "infrared.h"
-#include "gps.h"
 #include "autopilot.h"
 #include "estimator.h"
 #include "ap_downlink.h"

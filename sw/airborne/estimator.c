@@ -32,7 +32,7 @@
 #include "estimator.h"
 #include "uart.h"
 #include "ap_downlink.h"
-#include "gps.h"
+#include "gps_ppz.h"
 #include "nav.h"
 
 

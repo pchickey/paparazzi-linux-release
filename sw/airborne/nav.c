@@ -31,7 +31,7 @@
 #include <math.h>
 
 #include "nav.h"
-#include "gps.h"
+#include "gps_ppz.h"
 #include "estimator.h"
 #include "fw_h_ctl.h"
 #include "fw_v_ctl.h"

@@ -50,7 +50,7 @@
 #endif
 
 #ifdef HITL
-#include "gps.h"
+#include "gps_ppz.h"
 #endif
 
 

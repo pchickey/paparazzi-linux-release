@@ -33,7 +33,7 @@
 
 #include "flight_plan.h"
 #include "uart.h"
-#include "gps.h"
+#include "gps_ppz.h"
 #include "gps_ubx.h"
 #include "nav.h"
 #include "latlong.h"

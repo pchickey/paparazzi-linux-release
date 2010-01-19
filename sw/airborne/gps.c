@@ -29,7 +29,7 @@
 
 #include <stdlib.h>
 
-#include "gps.h"
+#include "gps_ppz.h"
 #include "latlong.h"
 #include "sys_time.h"
 #include "airframe.h"
