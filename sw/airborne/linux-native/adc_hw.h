@@ -28,6 +28,9 @@
 #define AdcBank0(x) (x)
 #define AdcBank1(x) (x+NB_ADC)
 
+// worker thread and insertion function
+// pat hickey and brad lord, jan 2010
+
 void *adc_reader(void *);
 void adc_buffer_insert(int,int);
 
