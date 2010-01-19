@@ -1,6 +1,6 @@
 // ap_state.h
 // pat hickey and bradley lord, 09jan10
-
+// this is a hack - we wanted to eliminate inter_mcu
 
 // global definition of ap_state_t type
 
