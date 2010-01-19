@@ -1,13 +1,13 @@
 
 CC=gcc
-CFLAGS=-g -pthread -lrt
+CFLAGS=-g -O0 -pthread -lrt
 
 PAP_INCLUDES=-I/home/pat/paparazzi3/sw/include -I/home/pat/paparazzi3/sw/airborne -I/home/pat/paparazzi3/sw/airborne/linux-native -I/home/pat/paparazzi3/var/LINUXFC/
 
 all : libgpstest
 
-libgpstest: ../gps_libgps.c libgpstest.c
-	$(CC) $(PAP_INCLUDES) -lgps libgpstest.c -o libgpstest
+libgpstest: ../gps_libgps.c libgpstest.c ../gps_libgps.h
+	$(CC) $(PAP_INCLUDES) -lgps libgpstest.c ../gps_libgps.c -o libgpstest
 
 fopentty: fopen_tty.c
 	$(CC) -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B19200 \
