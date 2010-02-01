@@ -42,16 +42,17 @@ void actuators_send_to_pololu(void)
   servo_send(pololu_fd, 3, Chop(servos_values[3],0,254));
 }
 
+// mini ssc protocol for pololu micro maestro
+// http://www.pololu.com/docs/0J40/5.e
 void servo_send(int fd, int servo, uint8_t value)
 {
   uint8_t msg[3];
   msg[0] = (uint8_t) 0xFF;
   msg[1] = (uint8_t) servo;
   msg[2] = value;
-  int written;
-  written = write(fd,msg,(ssize_t)3);
+  write(fd,msg,(ssize_t)3);
   // debug pch
-  // printf("write servo %d value %d size %d\n", msg[1], msg[2], written);
+  // printf("write servo %d value %d\n", msg[1], msg[2]);
 
 }
 
