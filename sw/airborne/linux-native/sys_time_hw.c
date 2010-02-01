@@ -13,12 +13,7 @@ void init_sys_time_periodic(void)
 {
 
 }
-/*
-void sys_time_usleep(uint32_t us)
-{
-  usleep(us);
-}
-*/
+
 bool_t sys_time_periodic(void)
 {
   return TRUE;
