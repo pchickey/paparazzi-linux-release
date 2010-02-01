@@ -67,6 +67,11 @@ void *adc_reader(void *macht_nicht)
   char readbuf[255];
   fgets(readbuf, 255, adc_file);
 
+  // Incoming data looks like
+  // $A1,123\r\n
+  // where the number after $A specifies the channel number
+  // and the second number is the integer value of that channel.
+
   int result;
   char prefix;
   int channel, data;
