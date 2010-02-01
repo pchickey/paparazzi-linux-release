@@ -45,9 +45,11 @@
   </section>
 
   <section name="INFRARED" prefix="IR_">
-    <define name="ADC_IR1_NEUTRAL" value="400"/>
-    <define name="ADC_IR2_NEUTRAL" value="400"/>
-    <define name="ADC_TOP_NEUTRAL" value="400"/>
+    <define name="ADC_IR1_NEUTRAL" value="820"/> <!-- 448 -->
+    <define name="ADC_IR2_NEUTRAL" value="290"/> <!-- 92 -->
+    <define name="ADC_TOP_NEUTRAL" value="649"/> <!-- 241 -->
+
+
 
     <define name="LATERAL_CORRECTION" value="1."/>
     <define name="LONGITUDINAL_CORRECTION" value="1."/>
