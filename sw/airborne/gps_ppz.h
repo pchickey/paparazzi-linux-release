@@ -68,7 +68,7 @@ void gps_init( void );
 void gps_configure( void );
 void parse_gps_msg( void );
 void gps_downlink( void );
-// void gps_send( void );  // debug  pch 19jan10: conflicts with libgps
+void gps_send( void );  // debug  pch 19jan10: conflicts with libgps
 void gps_configure_uart( void );
 
 
