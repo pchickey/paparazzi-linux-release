@@ -204,8 +204,8 @@ void ir_update(void) {
 #if ! (defined SITL || defined HITL)
   ir_ir1 = (IR_IR1_SIGN)*(buf_ir1.sum/buf_ir1.av_nb_sample - IR_ADC_IR1_NEUTRAL);
   ir_ir2 = (IR_IR2_SIGN)*(buf_ir2.sum/buf_ir2.av_nb_sample - IR_ADC_IR2_NEUTRAL);
-  ir_roll = ir_lateral_correction * IR_RollOfIrs(ir_ir1, ir_ir2);
-  ir_pitch = ir_longitudinal_correction * IR_PitchOfIrs(ir_ir1, ir_ir2);
+  ir_roll = ir_lateral_correction * 10.0 * IR_RollOfIrs(ir_ir1, ir_ir2);
+  ir_pitch = ir_longitudinal_correction * 10.0 * IR_PitchOfIrs(ir_ir1, ir_ir2);
 #ifdef ADC_CHANNEL_IR_TOP
   ir_top =  ir_vertical_correction * IR_TopOfIr(buf_ir_top.sum/buf_ir_top.av_nb_sample - IR_ADC_TOP_NEUTRAL);
 #endif // IR_TOP
