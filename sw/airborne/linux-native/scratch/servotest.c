@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -12,8 +13,6 @@
 #define POLOLU_PATH_LONG "/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Micro_Maestro_6-Servo_Controller_00001644-if00"
 #define POLOLU_PATH "/dev/ttyACM0"
 #define POLOLU_BAUD B9600
-
-void servo_send(int,int,uint8_t);
 
 void servo_send(int fd, int servo, uint8_t value)
 {
