@@ -8,6 +8,7 @@
 *.a
 *.cma
 *.cmxa
+*.swp
 .depend
 var/
 sw/ground_segment/cockpit/gcs
