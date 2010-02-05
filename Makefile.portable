@@ -1,10 +1,10 @@
-
+PLANE_HOST=leper-colony.local
 CONFIG=\"linuxfc.h\"
 SRC_ARCH=linux-native
 
 srcs = sys_time.c commands.c actuators.c downlink.c datalink.c pprz_transport.c gps_ubx.c gps.c latlong.c infrared.c estimator.c nav.c fw_h_ctl.c fw_v_ctl.c nav_line.c nav_survey_rectangle.c common_nav.c
 srcs_arch = $(SRC_ARCH)/sys_time_hw.c $(SRC_ARCH)/fbw.c $(SRC_ARCH)/ap.c $(SRC_ARCH)/main.c $(SRC_ARCH)/servos_hw.c  $(SRC_ARCH)/uart_hw.c $(SRC_ARCH)/adc_hw.c
-headers=actuators.h adc.h ap_downlink.h autopilot.h datalink.h commands.h common_nav.h estimator.h downlink.h fbw_downlink.h fw_h_ctl.h fw_v_ctl.h gps.h gps_ubx.h infrared.h inter_mcu.h led.h main_ap.h main_fbw.h nav.h nav_line.h nav_survey_rectangle.h paparazzi.h ppm.h pprz_transport.h uart.h sys_time.h latlong.h modem.h xbee.h fw_h_ctl_a.h xbee24.h cam.h traffic_info.h
+headers=actuators.h adc.h ap_downlink.h autopilot.h datalink.h commands.h common_nav.h estimator.h downlink.h fbw_downlink.h fw_h_ctl.h fw_v_ctl.h gps_ppz.h gps_ubx.h infrared.h inter_mcu.h led.h main_ap.h main_fbw.h nav.h nav_line.h nav_survey_rectangle.h paparazzi.h ppm.h pprz_transport.h uart.h sys_time.h latlong.h modem.h xbee.h fw_h_ctl_a.h xbee24.h cam.h traffic_info.h
 headers_arch=adc_hw.h ap_state.h gpio.h gps_hw.h init_hw.h interrupt_hw.h led_hw.h link_mcu_hw.h ppm_hw.h servos_hw.h sys_time_hw.h uart_hw.h
 
 portable: ap.compile export
@@ -22,7 +22,8 @@ export: export_clean
 	cd /home/pat/paparazzi3/sw/airborne; cp $(srcs) $(headers)  /home/pat/paparazzi3/export
 	cd /home/pat/paparazzi3/sw/airborne; cp $(srcs_arch) /home/pat/paparazzi3/export/linux-native
 	cd /home/pat/paparazzi3/sw/airborne/linux-native; cp $(headers_arch) /home/pat/paparazzi3/export/linux-native
-
+	rsync -r export/ $(PLANE_HOST):export-paparazzi/
+	ssh $(PLANE_HOST) /home/pat/compile-paparazzi
 export_clean:
 	rm -rf export
 
