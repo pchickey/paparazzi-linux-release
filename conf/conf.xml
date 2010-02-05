@@ -1,12 +1,12 @@
 <conf>
   <aircraft
    name="LINUXFC"
-   ac_id="5"
+   ac_id="1"
    airframe="airframes/linuxfc.xml"
    radio="radios/cockpitMM.xml"
    telemetry="telemetry/default.xml"
-   flight_plan="flight_plans/livingston.xml"
-   settings="settings/basic.xml"
+   flight_plan="flight_plans/busch-dwing.xml"
+   settings="settings/tuning.xml"
    gui_color="#6293ba"
   />
 </conf>
