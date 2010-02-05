@@ -60,7 +60,7 @@ ARMGCC=/usr/bin/arm-elf-gcc
 
 all: static conf
 
-static : lib center tools cockpit multimon tmtc logalizer lpc21iap sim_static static_h usb_lib
+static : lib center tools cockpit multimon tmtc sim_static static_h 
 
 conf: conf/conf.xml conf/control_panel.xml
 
