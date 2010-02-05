@@ -13,7 +13,7 @@ CFLAGS =-O0 -Wall -g3 -I./ -I./include -I./aircraft -I./linux-native -DFBW -DAP 
 CFLAGS += -DPOLOLU_PATH=\"/dev/ttyACM0\"
 
 # Downlink UART1
-CFLAGS += -DUART1_FNAME=\"/dev/xbee1\" -DUART1_BAUD=B19200
+CFLAGS += -DUART1_FNAME=\"/dev/xbee0\" -DUART1_BAUD=B19200
 
 # ADC 
 CFLAGS += -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B9600 
@@ -23,7 +23,7 @@ CFLAGS += -DUART0_FNAME=\"/dev/ftdi0\" -DUART0_BAUD=B38400
 
 SRCS = sys_time.c commands.c actuators.c downlink.c datalink.c pprz_transport.c gps_ubx.c gps.c latlong.c infrared.c estimator.c nav.c fw_h_ctl.c fw_v_ctl.c nav_line.c nav_survey_rectangle.c
 SRCS_ARCH = $(ARCH)/sys_time_hw.c $(ARCH)/fbw.c $(ARCH)/ap.c $(ARCH)/main.c $(ARCH)/servos_hw.c  $(ARCH)/uart_hw.c $(ARCH)/adc_hw.c
-headers=actuators.h adc.h ap_downlink.h autopilot.h datalink.h commands.h common_nav.h estimator.h downlink.h fbw_downlink.h fw_h_ctl.h fw_v_ctl.h gps.h gps_ubx.h infrared.h inter_mcu.h led.h main_ap.h main_fbw.h nav.h nav_line.h nav_survey_rectangle.h paparazzi.h ppm.h pprz_transport.h uart.h sys
+headers=actuators.h adc.h ap_downlink.h autopilot.h datalink.h commands.h common_nav.h estimator.h downlink.h fbw_downlink.h fw_h_ctl.h fw_v_ctl.h gps_ppz.h gps_ubx.h infrared.h inter_mcu.h led.h main_ap.h main_fbw.h nav.h nav_line.h nav_survey_rectangle.h paparazzi.h ppm.h pprz_transport.h uart.h sys_time.h
 headers_arch=adc_hw.h ap_state.h gpio.h gps_hw.h init_hw.h interrupt_hw.h led_hw.h link_mcu_hw.h ppm_hw.h servos_hw.h sys_time_hw.h uart_hw.h
 
 OBJECTS=$(SRCS:.c=.o) $(SRCS_ARCH:.c=.o)
