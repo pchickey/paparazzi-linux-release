@@ -181,7 +181,8 @@ clean_list :
 .PHONY : all  \
 build elf hex lss sym clean clean_list program
 
-
+upload :
+	make -C $(PAPARAZZI_SRC) export
 #
 # Dependencies
 #
