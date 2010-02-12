@@ -1,6 +1,3 @@
-#   Paparazzi $Id: README 3294 2009-04-29 06:34:50Z hecto $
-#   Copyright (C) 2003-2006 Pascal Brisset Antoine Drouin
-#
 # This file is part of paparazzi.
 #
 # paparazzi is free software; you can redistribute it and/or modify
@@ -32,6 +29,15 @@ Up to date informations are available from the wiki website
 and from the mailing list (http://savannah.nongnu.org/mail/?group=paparazzi)
 and the IRC channel (freenode, #paparazzi).
 
+Paparazzi for Linux
+-------------------
+
+These files are derived from the Paparazzi project and are intended to support
+a Linux-based flight computer.
+
+Information about this project, including supported hardware, can be found
+at http://moreproductive.org/autopilot/
+
 Directories quick and dirty description:
 ---------------------------------------
 
@@ -39,25 +45,15 @@ conf: the configuration directory (airframe, radio, ... descriptions).
 
 data: where to put read-only data (e.g. maps, terrain elevation files, icons)
 
-hw: hardware (electronic schemas, PCBs, ...)
-
 sw: software (onboard, ground station, simulation, ...)
 
 var: products of compilation, cache for the map tiles, ...
-
-debian: Debian packaging control files
 
 
 Required Software
 -----------------
 
 Installation is described in the wiki (paparazzi.enac.fr/wiki/Installation).
-Main requirements include
- - OCaml (ocaml.org), xml-light library (http://tech.motion-twin.com/xmllight)
- - gcc, GTK2, Glib2, libgnomecanvas, libxml2
- - ARM7 micro-controller development environnment (gcc, loader, libc, binutils)
- - ...
-
 For Debian or Ubuntu users, required packages are available at
 
 	http://paparazzi.enac.fr/debian
@@ -72,28 +68,10 @@ Compilation and demo simulation
 
   1) "make" in the top directory to compile all the libraries and tools.
 
-  2) "./paparazzi" to run the Paparazzi Center
+  2) "make AIRCRAFT=LINUXFC ap" will build the autopilot to run locally.
 
-  3) Select the "MJ5" or the "TJ1" aircraft in the upper-left A/C
-combo box. Select "sim" from upper-middle "target" combo box. Click
-"Build". When the compilation is finished, select "Simulation" from
-the upper-right session combo box and click "Execute".
-
-  4) In the GCS, wait about 10s for the aircraft to be in the "Holding
-point" navigation block. Switch to the "Takeoff" block (lower-left
-blue airway button in the strip). Takeoff with the green launch button.
-
-Uploading of the embedded software
-----------------------------------
-
-  1) Power the flight controller board while it is connected to the PC with
-the USB cable.
-
-  2) From the Paparazzi center, select the "ap" target, and click "Upload".
+  3) "make AIRCRAFT=LINUXFC ap.upload" will, after a successful local build,
+     run "make export". As defined in Makefile.portable, this will rsync
+     the latest files to your flight computer.
 
 
-Flight
--------------------------------------
-
-  1) From the Paparazzi Center, select the flight session and ... do
-the same than in simulation !
