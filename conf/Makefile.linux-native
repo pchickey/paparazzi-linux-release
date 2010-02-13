@@ -100,35 +100,14 @@ GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
 ALL_CFLAGS = -I. $(CFLAGS)
 ALL_ASFLAGS =  -I. -x assembler-with-cpp $(ASFLAGS)
 
-
-# Default target.
-all: $(BINARY) 
-
-# Link: create ELF output file from object files.
-.SECONDARY : $(OBJDIR)/$(TARGET).elf
-.PRECIOUS : $(AOBJARM) $(AOBJ) $(COBJARM) $(COBJ)
-%.elf: $(AOBJ) $(COBJARM) $(COBJ)
-	@echo LD $@
-	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $@ $(LDFLAGS) $($(TARGET).LDFLAGS)
-
-# Link: create binary
-.SECONDARY : $(OBJDIR)/$(BINARY)
-.PRECIOUS : $(AOBJ) $(COBJARM) $(COBJ)
-$(BINARY): $(AOBJ) $(COBJARM) $(COBJ)
-	@echo LD $@
-	$(Q)$(CC) $(THUMB) $(ALL_CFLAGS) $(AOBJ) $(COBJARM) $(COBJ)  --output $(OBJDIR)/$(BINARY) $(LDFLAGS) 
-
-
-
-
 # Compile: create object files from C source files.
 $(OBJDIR)/%.o : %.c $(OBJDIR)/../Makefile.ac
-	@echo CC $@
+	@echo NOCC $@
 	$(Q)test -d $(dir $@) || mkdir -p $(dir $@)
 	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
 
 $(OBJDIR)/%.o : $(SRC_ARCH)/lpcusb/%.c $(OBJDIR)/../Makefile.ac
-	@echo CC $@
+	@echo NOCC $@
 	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
 
 
@@ -136,18 +115,6 @@ $(OBJDIR)/%.o : $(SRC_ARCH)/lpcusb/%.c $(OBJDIR)/../Makefile.ac
 #$(OBJDIR)/%.o : $(OBJDIR)/%.c
 #	@echo CC $@
 #	$(Q)$(CC) -c $(ALL_CFLAGS) $(CONLYFLAGS) $< -o $@
-
-# Assemble: create object files from assembler source files.
-$(AOBJ) : $(OBJDIR)/%.o : %.S
-	@echo AS $@
-	$(Q)$(CC) -c $(THUMB) $(ALL_ASFLAGS) $< -o $@
-
-
-# Assemble: create object files from assembler source files.
-$(AOBJARM) : $(OBJDIR)/%.o : $(SRC_ARCH)/%.S
-	@echo AS $@
-	$(Q)$(CC) -c $(ALL_ASFLAGS) $< -o $@
-
 
 # Target: clean project.
 clean: clean_list
@@ -176,21 +143,25 @@ clean_list :
 	$(REMOVE) .dep/*
 	$(REMOVE) *~
 
+compile:
+	echo "BUILDING AP"
+upload:
+	echo "TRYING TO UPLOAD OR SOMETHING"
+	make -C $(PAPARAZZI_SRC) export
 
 # Listing of phony targets.
 .PHONY : all  \
 build elf hex lss sym clean clean_list program
 
-upload :
-	make -C $(PAPARAZZI_SRC) export
+
 #
 # Dependencies
 #
 
 $(OBJDIR)/.depend:
-	@echo DEPEND $@
-	@test -d $(OBJDIR) || mkdir -p $(OBJDIR)
-	$(Q)$(CC) -MM -MG $(CFLAGS) $($(TARGET).CFLAGS) $($(TARGET).srcs) | sed 's|\([^\.]*\.o\)|$(OBJDIR)/\1|' > $@
+	@echo DEPENDS $@
+#	@test -d $(OBJDIR) || mkdir -p $(OBJDIR)
+#	$(Q)$(CC) -MM -MG $(CFLAGS) $($(TARGET).CFLAGS) $($(TARGET).srcs) | sed 's|\([^\.]*\.o\)|$(OBJDIR)/\1|' > $@
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),erase)

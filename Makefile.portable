@@ -1,6 +1,7 @@
 PLANE_HOST=leper-colony.local
 CONFIG=\"linuxfc.h\"
 SRC_ARCH=linux-native
+COMPILE_AP=/home/pat/compile-paparazzi
 
 srcs = sys_time.c commands.c actuators.c downlink.c datalink.c pprz_transport.c gps_ubx.c gps.c latlong.c infrared.c estimator.c nav.c fw_h_ctl.c fw_v_ctl.c nav_line.c nav_survey_rectangle.c common_nav.c
 srcs_arch = $(SRC_ARCH)/sys_time_hw.c $(SRC_ARCH)/fbw.c $(SRC_ARCH)/ap.c $(SRC_ARCH)/main.c $(SRC_ARCH)/servos_hw.c  $(SRC_ARCH)/uart_hw.c $(SRC_ARCH)/adc_hw.c
@@ -19,11 +20,11 @@ export: export_clean
 	cp sw/include/*.h export/include
 	cp conf/autopilot/linuxfc.h export/include
 	cp var/LINUXFC/*.h export/aircraft
-	cd /home/pat/paparazzi3/sw/airborne; cp $(srcs) $(headers)  /home/pat/paparazzi3/export
-	cd /home/pat/paparazzi3/sw/airborne; cp $(srcs_arch) /home/pat/paparazzi3/export/linux-native
-	cd /home/pat/paparazzi3/sw/airborne/linux-native; cp $(headers_arch) /home/pat/paparazzi3/export/linux-native
+	cd $(PAPARAZZI_SRC)/sw/airborne; cp $(srcs) $(headers)  $(PAPARAZZI_SRC)/export
+	cd $(PAPARAZZI_SRC)/sw/airborne; cp $(srcs_arch) $(PAPARAZZI_SRC)/export/linux-native
+	cd $(PAPARAZZI_SRC)/sw/airborne/linux-native; cp $(headers_arch) $(PAPARAZZI_SRC)/export/linux-native
 	rsync -r export/ $(PLANE_HOST):export-paparazzi/
-	ssh $(PLANE_HOST) /home/pat/compile-paparazzi
+	echo $(COMPILE_AP) | ssh $(PLANE_HOST) 
 export_clean:
 	rm -rf export
 
