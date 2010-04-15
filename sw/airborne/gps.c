@@ -64,11 +64,11 @@ void gps_downlink( void ) {
 
 
 #ifndef PERIOD_GPS_DefaultChannel_0
-  gps_send();
+  gps_send_ppz();
 #endif
 }
 
-void gps_send( void ) {
+void gps_send_ppz( void ) {
   
   DOWNLINK_SEND_GPS(DefaultChannel, &gps_mode, &gps_utm_east, &gps_utm_north, &gps_course, &gps_alt, &gps_gspeed,&gps_climb, &gps_week, &gps_itow, &gps_utm_zone, &gps_nb_ovrn);
   
