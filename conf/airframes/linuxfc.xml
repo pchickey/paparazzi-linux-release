@@ -56,7 +56,8 @@
     <define name="VERTICAL_CORRECTION" value="1.5"/>
 
     <define name="HORIZ_SENSOR_TILTED" value="1"/>
-    <define name="IR2_SIGN" value="-1"/>
+    <define name="IR1_SIGN" value="-1"/>
+    <define name="IR2_SIGN" value="1"/>
     <define name="TOP_SIGN" value="-1"/>
 
     <define name="ROLL_NEUTRAL_DEFAULT" value="-3.6" unit="deg"/>
