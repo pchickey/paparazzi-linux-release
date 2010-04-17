@@ -1,4 +1,4 @@
-PLANE_HOST=leper-colony.local
+PLANE_HOST=192.168.1.103
 CONFIG=\"linuxfc.h\"
 SRC_ARCH=linux-native
 COMPILE_AP=/home/pat/compile-paparazzi
