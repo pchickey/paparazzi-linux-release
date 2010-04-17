@@ -4,6 +4,7 @@
   <header>
 #include "nav_line.h"
 #include "datalink.h"
+#include "gps_libgps.h"
 </header>
   <waypoints>
     <waypoint name="HOME" x="0" y="0"/>
