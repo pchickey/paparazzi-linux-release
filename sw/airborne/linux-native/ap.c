@@ -144,7 +144,7 @@ void init_ap( void ) {
   /************* Sensors initialization ***************/
   ir_init();
   gps_init();
-  Uart0Init();
+  // Uart0Init(); 
   Uart1Init();
   /************ Internal status ***************/
   h_ctl_init();
@@ -160,20 +160,18 @@ void init_ap( void ) {
 /*********** EVENT ***********************************************************/
 void event_task_ap( void ) {
   
-  GpsLink(NonBlockRead());
-  if (GpsBuffer()) {
-    ReadGpsBuffer();
-  } 
-  
   if (gps_msg_received) {
-      parse_gps_msg();
-    gps_msg_received = FALSE;
-    if (gps_pos_available) {
+    // Try to acquire gps lock:
+    if(pthread_mutex_trylock(&gps_mutex)){
+      gps_msg_received = FALSE;
       gps_verbose_downlink = !launch;
       UseGpsPosNoSend(estimator_update_state_gps);
       gps_downlink();
       gps_pos_available = FALSE;
-    }
+      pthread_mutex_unlock(&gps_mutex);
+    } 
+    // If the lock is currently held, just wait until next around 
+    // to read the gps data.
   }
 
   PprzLink(NonBlockRead());

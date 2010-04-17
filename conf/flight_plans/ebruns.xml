@@ -1,10 +1,9 @@
 <!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
 
-<flight_plan alt="75" ground_alt="0" lat0="40.521638" lon0="-74.460283" max_dist_from_home="1500" name="Basic" security_height="25">
+<flight_plan alt="75" ground_alt="0" lat0="40.402272" lon0="-74.434759" max_dist_from_home="1500" name="Basic" security_height="25">
   <header>
 #include "nav_line.h"
 #include "datalink.h"
-#include "gps_libgps.h"
 </header>
   <waypoints>
     <waypoint name="HOME" x="0" y="0"/>

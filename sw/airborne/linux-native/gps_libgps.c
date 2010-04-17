@@ -27,11 +27,12 @@
 #include "std.h"
 #include "gps_ppz.h" // paparazzi gps had to be renamed because of naming conflict
 #include "gps_libgps.h" // prototypes for these functions
+#include "latlong.h"
+#include "nav.h"
 
 // These global variables come right from gps_ubx.c:
-uint8_t gps_mode;
-uint16_t gps_week;
-uint32_t gps_itow;
+uint16_t gps_week; // Not used
+uint32_t gps_itow; // Not used
 int32_t gps_alt;
 uint16_t gps_gspeed;
 int16_t gps_climb;
@@ -40,36 +41,91 @@ int32_t gps_utm_east, gps_utm_north;
 uint8_t gps_utm_zone;
 uint8_t gps_mode;
 volatile bool_t gps_msg_received;
-bool_t gps_pos_available;
-uint8_t ubx_id, ubx_class;
+bool_t gps_pos_available; // Not used
+uint8_t ubx_id, ubx_class; // Not used
 int32_t gps_lat, gps_lon;
-uint16_t gps_reset;
+uint16_t gps_reset; // Not used
 uint16_t gps_PDOP;
-uint32_t gps_Pacc, gps_Sacc;
+uint32_t gps_Pacc, gps_Sacc; // Not used
 uint8_t gps_numSV;
 
+uint8_t gps_nb_ovrn; // Not used
+uint8_t gps_nb_channels; 
+struct svinfo gps_svinfos[GPS_NB_CHANNELS];
+
 // Variables used within gps_libgps.c:
+static struct gps_data_t gps_con; 
 
 void gps_init(void)
 {
-  struct gps_data_t gps_con; 
   int res;
   res = gps_open_r("localhost", "2947", &gps_con);
-    if (res < 0) { perror("libgps open failed"); exit(-1); }
+  if (res < 0) {
+    perror("libgps open failed"); 
+    exit(-1); 
+  }
   gps_stream(&gps_con, WATCH_ENABLE, NULL);
+
+  pthread_mutex_init(&gps_mutex, NULL);
   
   pthread_t gps_update_thread;
-  pthread_create(&gps_update_thread, NULL, &gps_update, (void *)&gps_con);
+  pthread_create(&gps_update_thread, NULL, &gps_update, NULL);
 }
 
-void *gps_update(void *gps_con_a)
+void *gps_update(void *nothing)
 {
-  struct gps_data_t *gps_con = (struct gps_data_t *) gps_con_a;
+  int i;
   printf("calling gps_update\n");
   while(1)
   {
-    gps_poll(gps_con);
-    printf("gps polled: status %d lat %f lon %f time %f \n", gps_con->status, gps_con->fix.latitude, gps_con->fix.longitude, gps_con->fix.time);
+    gps_poll(&gps_con);
+    // printf("gps polled: status %d lat %f lon %f time %f \n", gps_con.status, gps_con.fix.latitude, gps_con.fix.longitude, gps_con.fix.time);
+    
+    // acquire the gps lock:
+    pthread_mutex_lock(&gps_mutex); 
+    // copy the values from the libgps result object into 
+    // Paparazzi's global variables:
+    gps_mode = gps_con.fix.mode;
+    gps_lat = gps_con.fix.latitude * 1e7;
+    gps_lon = gps_con.fix.longitude * 1e7;
+    gps_gspeed = gps_con.fix.speed * 100;
+    gps_climb = gps_con.fix.climb;
+    gps_alt = gps_con.fix.altitude * 100;
+    // calculate utm values from lattitude/longitude:
+    latlong_utm_of(RadOfDeg(gps_lat/1e7),RadOfDeg(gps_lon/1e7), nav_utm_zone0);
+    gps_utm_east = latlong_utm_x * 100;
+    gps_utm_north = latlong_utm_y * 100;
+    gps_utm_zone = nav_utm_zone0;
+    // libgps seems to give the course with respect to true north
+    // I really hope the paparazzi is okay with that
+    gps_course = gps_con.fix.track * 10;
+    gps_PDOP = gps_con.dop.pdop;
+    // A number of other values are only available with certain 
+    // gps protocol versions. None of them are used by the autopilot,
+    // so I won't worry about them for now.
+    
+    // Copy the satelite info:
+    gps_numSV = gps_nb_channels = gps_con.satellites_visible;
+    for (i = 0; i < Min(gps_nb_channels, GPS_NB_CHANNELS); i++){
+      gps_svinfos[i].svid = gps_con.PRN[i];
+      gps_svinfos[i].elev = gps_con.elevation[i];
+      gps_svinfos[i].azim = gps_con.azimuth[i];
+      // I have no idea what these next couple fields are.
+      // They are not referenced anywhere in the ap code, so I hope
+      // it won't break anything to give them dummy values of 0.
+      gps_svinfos[i].flags = 0;
+      gps_svinfos[i].qi = 0;
+      gps_svinfos[i].cno = 0;
+    }
+    
+    // Tell the main thread that a gps message has been received:
+    gps_msg_received = TRUE;
+    // Release the lock:
+    pthread_mutex_unlock(&gps_mutex);
   } 
+}
+
+void parse_gps_msg( void ){
+
 }
 
