@@ -13,7 +13,7 @@ CFLAGS =-O0 -Wall -g3 -I./ -I./include -I./aircraft -I./linux-native -DFBW -DAP 
 CFLAGS += -DPOLOLU_PATH=\"/dev/ttyACM0\"
 
 # Downlink UART1
-CFLAGS += -DUART1_FNAME=\"/dev/xbee1\" -DUART1_BAUD=B19200
+CFLAGS += -DUART1_FNAME=\"/dev/xbee0\" -DUART1_BAUD=B19200
 
 # ADC 
 CFLAGS += -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B9600 
