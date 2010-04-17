@@ -10,16 +10,14 @@ CFLAGS =-O0 -Wall -g3 -I./ -I./include -I./aircraft -I./linux-native -DFBW -DAP 
 
 
 
-CFLAGS += -DPOLOLU_PATH=\"/dev/null\"
+CFLAGS += -DPOLOLU_PATH=\"/dev/ttyACM0\"
 
 # Downlink UART1
-CFLAGS += -DUART1_FNAME=\"/dev/pts/2\" -DUART1_BAUD=B19200
+CFLAGS += -DUART1_FNAME=\"/dev/xbee1\" -DUART1_BAUD=B19200
 
 # ADC 
-CFLAGS += -DADC_PATH=\"/dev/null\" -DADC_BAUD=B9600 
+CFLAGS += -DADC_PATH=\"/dev/ftdi1\" -DADC_BAUD=B9600 
 
-# GPS Uart0
-#CFLAGS += -DUART0_FNAME=\"/dev/ftdi0\" -DUART0_BAUD=B38400 
 
 SRCS = sys_time.c commands.c actuators.c downlink.c datalink.c pprz_transport.c  gps.c latlong.c infrared.c estimator.c nav.c fw_h_ctl.c fw_v_ctl.c nav_line.c nav_survey_rectangle.c
 SRCS_ARCH = $(ARCH)/sys_time_hw.c $(ARCH)/fbw.c $(ARCH)/ap.c $(ARCH)/main.c $(ARCH)/servos_hw.c  $(ARCH)/uart_hw.c $(ARCH)/adc_hw.c $(ARCH)/gps_libgps.c
