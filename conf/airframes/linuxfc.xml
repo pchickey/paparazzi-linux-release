@@ -11,7 +11,7 @@
     <!-- For Pololu Mini-SSC Protocol Output. Channels start at 0,
          and physical maximums/minimums are set using Maestro setup software. 
          See http://www.pololu.com/docs/0J40/5.e for more info -->
-    <servo name="AILERON"          no="0" min="0" neutral="128" max="254"/>
+    <servo name="AILERON"          no="0" min="254" neutral="128" max="0"/>
     <servo name="ELEVATOR"         no="1" min="0" neutral="128" max="254"/>
     <servo name="THROTTLE"         no="2" min="0" neutral="128" max="254"/>
     <servo name="RUDDER"           no="3" min="0" neutral="128" max="254"/>
